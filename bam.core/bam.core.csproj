@@ -22,6 +22,9 @@
       <OutputPath Condition=" '$(OS)' == 'UNIX' ">$(HOME)\.bam\build\$(Configuration)\$(MSBuildThisFileName)\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="_core\_ServiceProxy\SecureChannel.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="CsQuery.Core" Version="2.0.1" />
     <PackageReference Include="DNS" Version="5.0.0" />
     <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="6.3.0" />

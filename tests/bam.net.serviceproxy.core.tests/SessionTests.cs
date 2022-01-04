@@ -44,7 +44,7 @@ namespace Bam.Net.ServiceProxy.Tests
 {
     public partial class ServiceProxyTestContainer
     {
-        [UnitTest]
+/*        [UnitTest]
         public void Securesession_ShouldBeAbleToEncryptAndDecryptWithSecureSession()
         {
             SecureChannelConfig config = new SecureChannelConfig();
@@ -57,7 +57,7 @@ namespace Bam.Net.ServiceProxy.Tests
             string cipher = testObject.EncryptWithPublicKey(data);
             string decrypted = testObject.DecryptWithPrivateKey(cipher);
             Expect.AreEqual(data, decrypted);
-        }
+        }*/
         
 /*        [UnitTest]
         public void Securesession_ShouldBeAbleToGetSecureSession()
@@ -144,7 +144,7 @@ namespace Bam.Net.ServiceProxy.Tests
             Expect.IsTrue(result.Success);
         }*/
 
-        [UnitTest]
+/*        [UnitTest]
         public void ShouldBeAbleToEncryptAndDecryptWithSecureSession()
         {
             InitializeSecureChannelSchema();
@@ -162,6 +162,6 @@ namespace Bam.Net.ServiceProxy.Tests
             Exception ex;
             config.SchemaInitializer.Initialize(new ConsoleLogger(), out ex);
             Expect.IsNull(ex);
-        }
+        }*/
     }
 }

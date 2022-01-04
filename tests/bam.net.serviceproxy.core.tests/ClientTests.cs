@@ -22,7 +22,7 @@ namespace Bam.Net.ServiceProxy.Tests
         }
 
 
-        class TestApplicationNameProvider : IApplicationNameProvider
+/*        class TestApplicationNameProvider : IApplicationNameProvider
         {
             public TestApplicationNameProvider(string name)
             {
@@ -39,21 +39,21 @@ namespace Bam.Net.ServiceProxy.Tests
             {
                 return Name;
             }
-        }
+        }*/
 
-        public static void ClearApps()
+/*        public static void ClearApps()
         {
             ApplicationCollection apps = Secure.Application.LoadAll();
             apps.Delete();
-        }
+        }*/
 
-        public static void ClientTestSetup()
+/*        public static void ClientTestSetup()
         {
             RegisterDb();
             LocalApiKeyManager.Default.UserResolver = new TestUserResolver();
-        }
+        }*/
 
-        [UnitTest] // RegisterDb is defined in Program.cs
+/*        [UnitTest] // RegisterDb is defined in Program.cs
         public void ApiKey_ShouldCreateToken()
         {
 			ClientTestSetup();
@@ -98,6 +98,6 @@ namespace Bam.Net.ServiceProxy.Tests
             bool isValid = resolver.IsValidKeyToken(data, token);
             Expect.IsTrue(isValid, "token was not valid");
 			ClearApps();
-        }
+        }*/
     }
 }

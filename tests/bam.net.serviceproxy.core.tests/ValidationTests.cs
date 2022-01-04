@@ -58,11 +58,11 @@ namespace Bam.Net.ServiceProxy.Tests
 
         public static void Prepare()
         {
-            RegisterDb();
+            //RegisterDb();
             Db.For<UserAccounts.Data.Account>(UserAccounts.UserAccountsDatabase.Default);
             ConsoleLogger logger = new ConsoleLogger();
             //SecureChannel.InitializeDatabase(logger);            
-            ClearApps();
+            //ClearApps();
         }
 
 /*        [UnitTest]

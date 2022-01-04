@@ -135,6 +135,7 @@ namespace Bam.Net.Presentation.Html
                     .SetAttribute("data-text", field.Name)
                     .CheckedIf(selectedCondition))
                 );
+                first = false;
             }
 
             list.AddChildren(items.ToArray());

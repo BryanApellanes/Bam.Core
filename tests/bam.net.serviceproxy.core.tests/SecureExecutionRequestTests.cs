@@ -49,7 +49,7 @@ namespace Bam.Net.ServiceProxy.Tests
 
 		public static void ClearAppsAndStopServers()
 		{
-			ClearApps();
+			//ClearApps();
             ServiceProxyTestHelpers.StopServers();
 		}
 
@@ -64,13 +64,13 @@ namespace Bam.Net.ServiceProxy.Tests
             });
 
             Prepare();
-            ApiKeyCollection keys = ApiKey.LoadAll();
-            keys.Delete();
+            //ApiKeyCollection keys = ApiKey.LoadAll();
+            //keys.Delete();
             SecureSessionCollection sessions = SecureSession.LoadAll();
             sessions.Delete();
 
-            ApplicationCollection all = Secure.Application.LoadAll();
-            all.Delete();
+            //ApplicationCollection all = Secure.Application.LoadAll();
+            //all.Delete();
 			ClearAppsAndStopServers();
         }
 
