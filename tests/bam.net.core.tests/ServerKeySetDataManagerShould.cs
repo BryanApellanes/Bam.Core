@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Bam.Net.Tests
 {
-    public class KeySetDataManagerShould
+    public class ServerKeySetDataManagerShould
     {
 
         [UnitTest]
@@ -25,7 +25,8 @@ namespace Bam.Net.Tests
             IServerKeySet serverKeySet = keySetDataManager.CreateServerKeySetAsync(testClientHostName).Result;
 
             Expect.IsNotNullOrEmpty(serverKeySet.RsaKey);
-            Expect.IsNotNull(serverKeySet.Identifier);
+            Expect.IsNotNullOrEmpty(serverKeySet.Identifier);
+            Expect.IsNotNullOrEmpty(serverKeySet.Secret);
             Expect.IsNullOrEmpty(serverKeySet.AesKey);
             Expect.IsNullOrEmpty(serverKeySet.AesIV);
 
@@ -39,32 +40,14 @@ namespace Bam.Net.Tests
         public void CreateClientKeySetForServerKeySet()
         {
             string testClientHostName = "test client hostname";
-            IServerKeySetDataManager keySetDataManager = new ServerKeySetDataManager(CreateTestDatabase($"{nameof(CreateClientKeySetForServerKeySet)}_Test_ServerKeySetData"));
-            IServerKeySet serverKeySet = keySetDataManager.CreateServerKeySetAsync(testClientHostName).Result;
-            IClientKeySet clientKeySet = keySetDataManager.CreateClientKeySetForServerKeySetAsync(serverKeySet).Result;
+            IServerKeySetDataManager serverKeySetDataManager = new ServerKeySetDataManager(CreateTestDatabase($"{nameof(CreateClientKeySetForServerKeySet)}_Test_ServerKeySetData"));
+            IServerKeySet serverKeySet = serverKeySetDataManager.CreateServerKeySetAsync(testClientHostName).Result;
+            IClientKeySet clientKeySet = serverKeySetDataManager.CreateClientKeySetForServerKeySetAsync(serverKeySet).Result;
 
             Expect.AreEqual(serverKeySet.Identifier, clientKeySet.Identifier);
             Expect.IsFalse(clientKeySet.GetIsInitialized());
             Expect.IsNullOrEmpty(clientKeySet.AesKey);
             Expect.IsNullOrEmpty(clientKeySet.AesIV);
-        }
-
-        [UnitTest]
-        public void CreateAesKeyExchangeForClientKeySet()
-        {
-            string testClientHostName = "test client hostname";
-            IServerKeySetDataManager serverKeySetDataManager = new ServerKeySetDataManager(CreateTestDatabase($"{nameof(CreateAesKeyExchangeForClientKeySet)}_Test_ServerKeySetData"));
-            IClientKeySetDataManager clientKeySetDatamanager = new ClientKeySetDataManager(CreateTestDatabase($"{nameof(CreateAesKeyExchangeForClientKeySet)}_Test_ClientKeySetData"));
-
-            IServerKeySet serverKeySet = serverKeySetDataManager.CreateServerKeySetAsync(testClientHostName).Result;
-            IClientKeySet clientKeySet = serverKeySetDataManager.CreateClientKeySetForServerKeySetAsync(serverKeySet).Result;
-            IAesKeyExchange aesKeyExchange = clientKeySetDatamanager.CreateAesKeyExchangeAsync(clientKeySet).Result;
-
-            Expect.AreEqual(clientKeySet.PublicKey, aesKeyExchange.PublicKey);
-            Expect.IsNotNullOrEmpty(aesKeyExchange.AesKeyCipher);
-            Expect.IsNotNullOrEmpty(aesKeyExchange.AesIVCipher);
-            Expect.AreEqual(clientKeySet.ClientHostName, aesKeyExchange.ClientHostName);
-            Expect.AreEqual(clientKeySet.ServerHostName, aesKeyExchange.ServerHostName);
         }
 
         [UnitTest]
@@ -97,10 +80,10 @@ namespace Bam.Net.Tests
         public void RetrieveServerKeySetForPublicKey()
         {
             string testClientHostName = "test client hostname";
-            IServerKeySetDataManager keySetDataManager = new ServerKeySetDataManager(CreateTestDatabase($"{nameof(CreateClientKeySetForServerKeySet)}_Test_ServerKeySetData"));
-            IServerKeySet serverKeySet = keySetDataManager.CreateServerKeySetAsync(testClientHostName).Result;
-            IClientKeySet clientKeySet = keySetDataManager.CreateClientKeySetForServerKeySetAsync(serverKeySet).Result;
-            IServerKeySet retreievedServerKeySet = keySetDataManager.RetrieveServerKeySetForPublicKeyAsync(clientKeySet.PublicKey).Result;
+            IServerKeySetDataManager serverKeySetDataManager = new ServerKeySetDataManager(CreateTestDatabase($"{nameof(CreateClientKeySetForServerKeySet)}_Test_ServerKeySetData"));
+            IServerKeySet serverKeySet = serverKeySetDataManager.CreateServerKeySetAsync(testClientHostName).Result;
+            IClientKeySet clientKeySet = serverKeySetDataManager.CreateClientKeySetForServerKeySetAsync(serverKeySet).Result;
+            IServerKeySet retreievedServerKeySet = serverKeySetDataManager.RetrieveServerKeySetForPublicKeyAsync(clientKeySet.PublicKey).Result;
             
             Expect.AreEqual(serverKeySet.Identifier, retreievedServerKeySet.Identifier);
             Expect.AreEqual(serverKeySet.Secret, retreievedServerKeySet.Secret);
@@ -113,14 +96,14 @@ namespace Bam.Net.Tests
         }
 
         [UnitTest]
-        public void RetrieveServerKeySetByIdentifier()
+        public void RetrieveServerKeySet()
         {
             string testClientHostName = "test client hostname";
-            IServerKeySetDataManager keySetDataManager = new ServerKeySetDataManager(CreateTestDatabase($"{nameof(CreateClientKeySetForServerKeySet)}_Test_ServerKeySetData"));
-            IServerKeySet serverKeySet = keySetDataManager.CreateServerKeySetAsync(testClientHostName).Result;
-            IClientKeySet clientKeySet = keySetDataManager.CreateClientKeySetForServerKeySetAsync(serverKeySet).Result;
-            IServerKeySet retreievedServerKeySet = keySetDataManager.RetrieveServerKeySetAsync(serverKeySet.Identifier).Result;
-
+            IServerKeySetDataManager serverKeySetDataManager = new ServerKeySetDataManager(CreateTestDatabase($"{nameof(CreateClientKeySetForServerKeySet)}_Test_ServerKeySetData"));
+            IServerKeySet serverKeySet = serverKeySetDataManager.CreateServerKeySetAsync(testClientHostName).Result;
+            IClientKeySet clientKeySet = serverKeySetDataManager.CreateClientKeySetForServerKeySetAsync(serverKeySet).Result;
+            IServerKeySet retreievedServerKeySet = serverKeySetDataManager.RetrieveServerKeySetAsync(serverKeySet.Identifier).Result;
+            
             Expect.AreEqual(serverKeySet.Identifier, retreievedServerKeySet.Identifier);
             Expect.AreEqual(serverKeySet.Secret, retreievedServerKeySet.Secret);
             Expect.AreEqual(serverKeySet.ApplicationName, retreievedServerKeySet.ApplicationName);
