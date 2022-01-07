@@ -38,8 +38,8 @@ namespace Bam.Net.Tests
         public void RetrieveClientKeySetAfterCreatingKeyExchange()
         {
             string testClientHostName = "test client hostname";
-            IServerKeySetDataManager serverKeySetDataManager = new ServerKeySetDataManager(CreateTestDatabase($"{nameof(CreateAesKeyExchangeForClientKeySet)}_Test_ServerKeySetData"));
-            IClientKeySetDataManager clientKeySetDatamanager = new ClientKeySetDataManager(CreateTestDatabase($"{nameof(CreateAesKeyExchangeForClientKeySet)}_Test_ClientKeySetData"));
+            IServerKeySetDataManager serverKeySetDataManager = new ServerKeySetDataManager(CreateTestDatabase($"{nameof(RetrieveClientKeySetAfterCreatingKeyExchange)}_Test_ServerKeySetData"));
+            IClientKeySetDataManager clientKeySetDatamanager = new ClientKeySetDataManager(CreateTestDatabase($"{nameof(RetrieveClientKeySetAfterCreatingKeyExchange)}_Test_ClientKeySetData"));
 
             IServerKeySet serverKeySet = serverKeySetDataManager.CreateServerKeySetAsync(testClientHostName).Result;
             IClientKeySet clientKeySet = serverKeySetDataManager.CreateClientKeySetForServerKeySetAsync(serverKeySet).Result;
@@ -72,8 +72,81 @@ namespace Bam.Net.Tests
             IAesKeyExchange aesKeyExchangeOne = clientKeySetDatamanager.CreateAesKeyExchangeAsync(clientKeySetOne).Result;
             IAesKeyExchange aesKeyExchangeTwo = clientKeySetDatamanager.CreateAesKeyExchangeAsync(clientKeySetTwo).Result;
 
-            int count = clientKeySetDatamanager.EncryptionDataRepository.Query<ClientKeySet>(query => query.Identifier == clientKeySetOne.Identifier).Count();
+            int count = clientKeySetDatamanager.EncryptionDataRepository.Query<ClientKeySet>(where => where.Identifier == clientKeySetOne.Identifier).Count();
             Expect.AreEqual(1, count);
+        }
+
+        [UnitTest]
+        public void RetreiveClientKeySetForPublicKey()
+        {
+            string testClientHostName = "test client hostname";
+            IServerKeySetDataManager serverKeySetDataManager = new ServerKeySetDataManager(CreateTestDatabase($"{nameof(RetreiveClientKeySetForPublicKey)}_Test_ServerKeySetData"));
+            IClientKeySetDataManager clientKeySetDatamanager = new ClientKeySetDataManager(CreateTestDatabase($"{nameof(RetreiveClientKeySetForPublicKey)}_Test_ClientKeySetData"));
+
+            IServerKeySet serverKeySet = serverKeySetDataManager.CreateServerKeySetAsync(testClientHostName).Result;
+            IClientKeySet clientKeySet = serverKeySetDataManager.CreateClientKeySetForServerKeySetAsync(serverKeySet).Result;
+
+            IClientKeySet retrievedClientKeySet = clientKeySetDatamanager.RetrieveClientKeySetForPublicKeyAsync(clientKeySet.PublicKey).Result;
+
+            Expect.AreEqual(clientKeySet.Identifier, retrievedClientKeySet.Identifier);
+            Expect.AreEqual(clientKeySet.ClientHostName, retrievedClientKeySet.ClientHostName);
+            Expect.AreEqual(clientKeySet.ServerHostName, retrievedClientKeySet.ServerHostName);
+            Expect.AreEqual(clientKeySet.AesKey, retrievedClientKeySet.AesKey);
+            Expect.AreEqual(clientKeySet.AesIV, retrievedClientKeySet.AesIV);
+            Expect.AreEqual(clientKeySet.GetIsInitialized(), retrievedClientKeySet.GetIsInitialized());
+            Expect.IsTrue(retrievedClientKeySet.GetIsInitialized());
+        }
+
+        [UnitTest]
+        public void SaveClientKeySetWithoutDuplicating()
+        {
+            string testClientHostName = "test client hostname";
+            IServerKeySetDataManager serverKeySetDataManager = new ServerKeySetDataManager(CreateTestDatabase($"{nameof(SaveClientKeySetWithoutDuplicating)}_Test_ServerKeySetData"));
+            IClientKeySetDataManager clientKeySetDataManager = new ClientKeySetDataManager(CreateTestDatabase($"{nameof(SaveClientKeySetWithoutDuplicating)}_Test_ClientKeySetData"));
+
+            IServerKeySet serverKeySet = serverKeySetDataManager.CreateServerKeySetAsync(testClientHostName).Result;
+
+            Expect.IsNotNullOrEmpty(serverKeySet.Secret);
+
+            ISecretExchange secretExchange = serverKeySetDataManager.GetSecretExchangeAsync(serverKeySet).Result;
+
+            IClientKeySet clientKeySet = serverKeySetDataManager.CreateClientKeySetForServerKeySetAsync(serverKeySet).Result;
+            IClientKeySet clientKeySetCopy = clientKeySet.CopyAsNew<ClientKeySet>();
+
+            IClientKeySet savedClientKeySet = clientKeySetDataManager.SaveClientKeySetAsync(clientKeySet).Result;
+            IClientKeySet savedAgainClientKeySet = clientKeySetDataManager.SaveClientKeySetAsync(clientKeySetCopy).Result;
+
+            int count = clientKeySetDataManager.EncryptionDataRepository.Query<ClientKeySet>(where => where.Identifier == clientKeySet.Identifier).Count();
+            Expect.AreEqual(1, count);
+        }
+
+        [UnitTest]
+        public void SetSecret()
+        {
+            string testClientHostName = "test client hostname";
+            IServerKeySetDataManager serverKeySetDataManager = new ServerKeySetDataManager(CreateTestDatabase($"{nameof(SetSecret)}_Test_ServerKeySetData"));
+            IClientKeySetDataManager clientKeySetDataManager = new ClientKeySetDataManager(CreateTestDatabase($"{nameof(SetSecret)}_Test_ClientKeySetData"));
+
+            IServerKeySet serverKeySet = serverKeySetDataManager.CreateServerKeySetAsync(testClientHostName).Result;
+            IClientKeySet clientKeySet = serverKeySetDataManager.CreateClientKeySetForServerKeySetAsync(serverKeySet).Result;
+
+            IAesKeyExchange aesKeyExchange = clientKeySetDataManager.CreateAesKeyExchangeAsync(clientKeySet).Result;
+            serverKeySet = serverKeySetDataManager.SetServerAesKeyAsync(aesKeyExchange).Result;
+
+            Expect.IsTrue(serverKeySet.GetIsAesInitialized());
+            Expect.IsTrue(clientKeySet.GetIsInitialized());
+            Expect.AreEqual(serverKeySet.AesKey, clientKeySet.AesKey);
+            Expect.AreEqual(serverKeySet.AesIV, clientKeySet.AesIV);
+            Expect.IsNotNullOrEmpty(serverKeySet.Secret);
+
+            ISecretExchange secretExchange = serverKeySetDataManager.GetSecretExchangeAsync(serverKeySet).Result;
+            IClientKeySet savedClientKeySet = clientKeySetDataManager.SaveClientKeySetAsync(clientKeySet).Result;            
+
+            Expect.IsNullOrEmpty(savedClientKeySet.Secret);
+
+            IClientKeySet secretSetClientKeySet = clientKeySetDataManager.SetSecret(secretExchange).Result;
+
+            Expect.AreEqual(secretSetClientKeySet.Secret, serverKeySet.Secret);
         }
 
         private Database CreateTestDatabase(string testName)
