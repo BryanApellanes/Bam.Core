@@ -24,7 +24,7 @@ namespace Bam.Net.Tests
             };
 
             string json = transformer.Transform(testMonkey);
-            IValueReverseTransformer<string, TestMonkey> untransformer = transformer.GetUntransformer();
+            IValueReverseTransformer<string, TestMonkey> untransformer = transformer.GetReverseTransformer();
 
             TestMonkey decoded = untransformer.ReverseTransform(json);
 
@@ -40,9 +40,27 @@ namespace Bam.Net.Tests
 
             string encoded = base64Transformer.Transform(randomBytes);
 
-            IValueReverseTransformer<string, byte[]> base64Untransformer = base64Transformer.GetUntransformer();
+            IValueReverseTransformer<string, byte[]> base64Untransformer = base64Transformer.GetReverseTransformer();
             byte[] decoded = base64Untransformer.ReverseTransform(encoded);
             Expect.AreEqual(randomBytes, decoded);
+        }
+
+        [UnitTest]
+        public void AesByteTransformerTest()
+        {
+            AesKeyVectorPair aesKeyVectorPair = new AesKeyVectorPair();
+            AesByteTransformer aesByteTransformer = new AesByteTransformer(aesKeyVectorPair);
+
+            string testData = "this is the test data";
+            byte[] testDataBytes = Encoding.UTF8.GetBytes(testData);
+
+            byte[] cipherData = aesByteTransformer.Transform(testDataBytes);
+
+            byte[] deciphered = aesByteTransformer.GetReverseTransformer().ReverseTransform(cipherData);
+
+            Expect.AreEqual(testDataBytes, deciphered);
+            string decipheredTestData = Encoding.UTF8.GetString(deciphered);
+            Expect.AreEqual(testData, decipheredTestData);
         }
 
         [UnitTest]
@@ -54,12 +72,10 @@ namespace Bam.Net.Tests
             ClientSession testClientSession = testSecureChannelSession.GetClientSession(false);
             testClientSession.InitializeSessionKey();
 
-            AesKeyVectorPair aesKey = new AesKeyVectorPair();
             ValueTransformerPipeline<TestMonkey> valueTransformerPipeline = new ValueTransformerPipeline<TestMonkey>();
             valueTransformerPipeline.BeforeTransformConverter = new BsonValueConverter<TestMonkey>();
             valueTransformerPipeline.AfterTransformConverter = new Base64ValueConverter();
 
-            valueTransformerPipeline.Add(new AesByteTransformer(() => aesKey));
             valueTransformerPipeline.Add(new GZipByteTransformer());
 
             TestMonkey testMonkey = new TestMonkey()
@@ -70,7 +86,7 @@ namespace Bam.Net.Tests
 
             string base64 = valueTransformerPipeline.Transform(testMonkey);
 
-            TestMonkey untransformed = valueTransformerPipeline.GetUntransformer().ReverseTransform(base64);
+            TestMonkey untransformed = valueTransformerPipeline.GetReverseTransformer().ReverseTransform(base64);
 
             Expect.AreEqual(testMonkey.Name, untransformed.Name);
         }
