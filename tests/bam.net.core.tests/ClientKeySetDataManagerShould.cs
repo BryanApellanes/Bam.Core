@@ -85,16 +85,21 @@ namespace Bam.Net.Tests
 
             IServerKeySet serverKeySet = serverKeySetDataManager.CreateServerKeySetAsync(testClientHostName).Result;
             IClientKeySet clientKeySet = serverKeySetDataManager.CreateClientKeySetForServerKeySetAsync(serverKeySet).Result;
+            clientKeySetDatamanager.SaveClientKeySetAsync(clientKeySet).Wait();
 
             IClientKeySet retrievedClientKeySet = clientKeySetDatamanager.RetrieveClientKeySetForPublicKeyAsync(clientKeySet.PublicKey).Result;
+
+            Expect.IsNullOrEmpty(clientKeySet.AesKey);
+            Expect.IsNullOrEmpty(clientKeySet.AesIV);
+            Expect.IsNullOrEmpty(retrievedClientKeySet.AesKey);
+            Expect.IsNullOrEmpty(retrievedClientKeySet.AesIV);
 
             Expect.AreEqual(clientKeySet.Identifier, retrievedClientKeySet.Identifier);
             Expect.AreEqual(clientKeySet.ClientHostName, retrievedClientKeySet.ClientHostName);
             Expect.AreEqual(clientKeySet.ServerHostName, retrievedClientKeySet.ServerHostName);
-            Expect.AreEqual(clientKeySet.AesKey, retrievedClientKeySet.AesKey);
-            Expect.AreEqual(clientKeySet.AesIV, retrievedClientKeySet.AesIV);
+
             Expect.AreEqual(clientKeySet.GetIsInitialized(), retrievedClientKeySet.GetIsInitialized());
-            Expect.IsTrue(retrievedClientKeySet.GetIsInitialized());
+            Expect.IsFalse(retrievedClientKeySet.GetIsInitialized());
         }
 
         [UnitTest]
