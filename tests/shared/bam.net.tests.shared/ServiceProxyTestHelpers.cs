@@ -22,7 +22,7 @@ using Bam.Net.Testing;
 using Bam.Net.Javascript;
 using Bam.Net.Server;
 using Bam.Net.ServiceProxy;
-using Bam.Net.ServiceProxy.Secure;
+using Bam.Net.ServiceProxy.Encryption;
 using System.Collections.Specialized;
 
 namespace Bam.Net.ServiceProxy.Tests

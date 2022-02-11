@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Bam.Net.Logging;
 using Bam.Net.ServiceProxy;
-using Bam.Net.ServiceProxy.Secure;
+using Bam.Net.ServiceProxy.Encryption;
 using System.Reflection;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Data.SQLite;
@@ -27,8 +27,8 @@ namespace Bam.Net.Services.Clients
     /// A client to the core bam service server.
     /// </summary>
     /// <seealso cref="Bam.Net.Logging.Loggable" />
-    /// <seealso cref="Bam.Net.ServiceProxy.Secure.IApiKeyResolver" />
-    /// <seealso cref="Bam.Net.ServiceProxy.Secure.IApiKeyProvider" />
+    /// <seealso cref="Bam.Net.ServiceProxy.Encryption.IApiKeyResolver" />
+    /// <seealso cref="Bam.Net.ServiceProxy.Encryption.IApiKeyProvider" />
     /// <seealso cref="Bam.Net.IApplicationNameProvider" />
     public partial class CoreClient // core
     {

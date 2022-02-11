@@ -4,7 +4,7 @@
 
 using System.Collections.Specialized;
 using System.Reflection;
-using Bam.Net.ServiceProxy.Secure;
+using Bam.Net.ServiceProxy.Encryption;
 using Bam.Net.Web;
 using Bam.Net.Testing.Unit;
 using System.Collections.Generic;

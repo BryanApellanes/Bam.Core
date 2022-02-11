@@ -19,7 +19,7 @@ using Bam.Net.UserAccounts;
 using Bam.Net.Server;
 using Bam.Net.Server.Listeners;
 using Bam.Net.Data.Repositories;
-using Bam.Net.ServiceProxy.Secure;
+using Bam.Net.ServiceProxy.Encryption;
 using System.Reflection;
 using Bam.Net.Logging.Http;
 using Bam.Net.Server.Renderers;

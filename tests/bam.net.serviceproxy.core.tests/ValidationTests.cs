@@ -22,7 +22,7 @@ using Bam.Net.Logging;
 using Bam.Net.Data;
 using Bam.Net.Testing;
 using Bam.Net.Javascript;
-using Bam.Net.ServiceProxy.Secure;
+using Bam.Net.ServiceProxy.Encryption;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;

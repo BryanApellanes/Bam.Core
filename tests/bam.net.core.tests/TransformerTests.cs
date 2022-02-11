@@ -1,7 +1,8 @@
-﻿using Bam.Net.Encryption;
+﻿using Bam.Net.CommandLine;
+using Bam.Net.Encryption;
 using Bam.Net.ServiceProxy.Data;
 using Bam.Net.ServiceProxy.Data.Dao.Repository;
-using Bam.Net.ServiceProxy.Secure;
+using Bam.Net.ServiceProxy.Encryption;
 using Bam.Net.Testing.Unit;
 using Org.BouncyCastle.Security;
 using System;
@@ -19,7 +20,7 @@ namespace Bam.Net.Tests
         {
             BsonTransformer<TestMonkey> transformer = new BsonTransformer<TestMonkey>();
             TestMonkey testMonkey = new TestMonkey()
-            { 
+            {
                 Name = "Bson Fred"
             };
 
@@ -40,7 +41,7 @@ namespace Bam.Net.Tests
             };
 
             string json = transformer.Transform(testMonkey);
-            
+
             TestMonkey decoded = transformer.GetReverseTransformer().ReverseTransform(json);
 
             Expect.AreEqual(testMonkey.Name, decoded.Name);
@@ -190,7 +191,7 @@ namespace Bam.Net.Tests
             byte[] testBytes = Encoding.UTF8.GetBytes(testData);
 
             byte[] transformed = testBytes;
-            foreach(IValueTransformer<byte[], byte[]> transformer in transformers)
+            foreach (IValueTransformer<byte[], byte[]> transformer in transformers)
             {
                 transformed = transformer.Transform(transformed);
             }
@@ -199,7 +200,7 @@ namespace Bam.Net.Tests
             transformers.BackwardsEach(transformer => reverseTransforms.Add(transformer.GetReverseTransformer()));
 
             byte[] reversed = transformed;
-            foreach(IValueReverseTransformer<byte[], byte[]> reverseTransformer in reverseTransforms)
+            foreach (IValueReverseTransformer<byte[], byte[]> reverseTransformer in reverseTransforms)
             {
                 reversed = reverseTransformer.ReverseTransform(reversed);
             }
@@ -210,7 +211,7 @@ namespace Bam.Net.Tests
         }
 
         [UnitTest]
-        public void ByteTransformPipelineTransformAndReverse()
+        public void ByteTransformPipelineShouldTransformAndReverse()
         {
             AesKeyVectorPair aesKey1 = new AesKeyVectorPair();
             AesByteTransformer aesByteTransformer = new AesByteTransformer(aesKey1);
@@ -224,44 +225,75 @@ namespace Bam.Net.Tests
             byte[] testBytes = Encoding.UTF8.GetBytes(testData);
 
             byte[] transformed = byteTransformerPipeline.Transform(testBytes);
-            
+
             Expect.IsFalse(testBytes.SequenceEqual(transformed));
 
             byte[] reversedBytes = byteTransformerPipeline.GetReverseTransformer().ReverseTransform(transformed);
             string reversed = Encoding.UTF8.GetString(reversedBytes);
 
             Expect.AreEqual(testData, reversed);
-
         }
 
-/*        [UnitTest]
-        public void PipelineShouldTransformAndReverse()
+        [UnitTest]
+        public void DataShouldTransformAndReverse()
         {
-            ServiceProxyDataRepository testServiceProxyDataRepository = new ServiceProxyDataRepository();
-            SecureChannelSession testSecureChannelSession = new SecureChannelSession(new Instant(), true);
-            testSecureChannelSession = testServiceProxyDataRepository.Save(testSecureChannelSession);
-            ClientSession testClientSession = testSecureChannelSession.GetClientSession(false);
-            testClientSession.InitializeSessionKey();
+            AesKeyVectorPair aesKey1 = new AesKeyVectorPair();
+            AesByteTransformer aesByteTransformer = new AesByteTransformer(aesKey1);
+            GZipByteTransformer gZipByteTransformer = new GZipByteTransformer();
 
-            ValueTransformerPipeline<TestMonkey> valueTransformerPipeline = new ValueTransformerPipeline<TestMonkey>();
-            valueTransformerPipeline.BeforeTransformConverter = new BsonValueConverter<TestMonkey>();
-            valueTransformerPipeline.AfterTransformConverter = new Base64ValueConverter();
+            ByteTransformerPipeline byteTransformerPipeline = new ByteTransformerPipeline();
+            byteTransformerPipeline.Add(aesByteTransformer);
+            byteTransformerPipeline.Add(gZipByteTransformer);
 
-            AesKeyVectorPair aesKey = new AesKeyVectorPair();
-            valueTransformerPipeline.Add(new AesByteTransformer(aesKey));
-            valueTransformerPipeline.Add(new GZipByteTransformer());
-
-            TestMonkey testMonkey = new TestMonkey()
+            TestMonkey bob = new TestMonkey
             {
-                Name = "Bobo",
-                TailCount = 3,
+                Name = "bob",
+                TailCount = 9
             };
 
-            string base64 = valueTransformerPipeline.Transform(testMonkey);
+            byte[] testBytes = bob.ToBson();
+            string base64TestData = Convert.ToBase64String(testBytes);
+            byte[] testData = Encoding.UTF8.GetBytes(base64TestData);
 
-            TestMonkey untransformed = valueTransformerPipeline.GetReverseTransformer().ReverseTransform(base64);
+            byte[] transformed = byteTransformerPipeline.Transform(testData);
 
-            Expect.AreEqual(testMonkey.Name, untransformed.Name);
-        }*/
+            Expect.IsFalse(testBytes.SequenceEqual(transformed));
+
+            byte[] reversedBytes = byteTransformerPipeline.GetReverseTransformer().ReverseTransform(transformed);
+            string base64Reversed = Encoding.UTF8.GetString(reversedBytes);
+            byte[] reversedDataBytes = Convert.FromBase64String(base64Reversed);
+
+            TestMonkey reversed = reversedDataBytes.FromBson<TestMonkey>();
+
+            Expect.AreEqual(bob.Name, reversed.Name);
+            Expect.AreEqual(bob.TailCount, reversed.TailCount);
+        }
+
+        [UnitTest]
+        public void PipelineShouldTransformAndReverse()
+        {
+            AesKeyVectorPair aesKey1 = new AesKeyVectorPair();
+            AesByteTransformer aesByteTransformer = new AesByteTransformer(aesKey1);
+
+            GZipByteTransformer gZipByteTransformer = new GZipByteTransformer();
+
+            ValueTranformerPipeline<TestMonkey> transformer = new ValueTranformerPipeline<TestMonkey>();
+
+            transformer.Add(aesByteTransformer);            
+            transformer.Add(gZipByteTransformer);
+
+            TestMonkey bob = new TestMonkey
+            {
+                Name = "bob",
+                TailCount = 9
+            };
+
+            byte[] transformed = transformer.Transform(bob);
+
+            TestMonkey reversed = transformer.GetReverseTransformer().ReverseTransform(transformed);
+
+            Expect.AreEqual(bob.Name, reversed.Name);
+            Expect.AreEqual(bob.TailCount, reversed.TailCount);
+        }
     }
 }

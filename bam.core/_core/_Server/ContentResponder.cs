@@ -14,7 +14,7 @@ using Bam.Net.Javascript;
 using Bam.Net.Logging;
 using Bam.Net.Server.Renderers;
 using Bam.Net.ServiceProxy;
-using Bam.Net.ServiceProxy.Secure;
+using Bam.Net.ServiceProxy.Encryption;
 using Bam.Net.UserAccounts.Data;
 using Newtonsoft.Json.Linq;
 using System.Reflection;

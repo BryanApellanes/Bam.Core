@@ -18,7 +18,7 @@ using Bam.Net.Encryption;
 using Bam.Net.Incubation;
 using Bam.Net.Server;
 using Bam.Net.Server.ServiceProxy;
-using Bam.Net.ServiceProxy.Secure;
+using Bam.Net.ServiceProxy.Encryption;
 using Bam.Net.Testing;
 using Bam.Net.Testing.Unit;
 using Bam.Net.UserAccounts;
