@@ -60,7 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Automation\Scripting\CSharpScriptContext.hbs" />
-    <Compile Include="..\submodules\bam.net.shared\ServiceProxy\Secure\IClientSessionProvider.cs" Link="IClientSessionProvider.cs" />
     <EmbeddedResource Include="Automation\Scripting\CSharpScriptContext.hbs" />    
   </ItemGroup>
   <ItemGroup>
