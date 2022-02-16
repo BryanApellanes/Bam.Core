@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Bam.Net.ServiceProxy.Encryption // core
 {
-    public partial class ApiKeyResolver
+    public partial class ApiSigningKeyResolver
     {
     }
 }

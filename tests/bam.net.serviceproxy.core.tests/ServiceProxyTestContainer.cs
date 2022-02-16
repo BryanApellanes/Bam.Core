@@ -93,7 +93,7 @@ namespace Bam.Net.ServiceProxy.Tests
             
         }
 
-        class TestApiKeyClient: SecureServiceProxyClient<string>
+        class TestApiKeyClient: EncryptedServiceProxyClient<string>
         {
             public TestApiKeyClient() : base("") { }
 
@@ -113,14 +113,14 @@ namespace Bam.Net.ServiceProxy.Tests
         public void ApiKeyProviderShouldNotBeNull()
         {
             TestApiKeyClient client = new TestApiKeyClient();
-            Expect.IsNotNull(((ApiKeyResolver)client.ApiKeyResolver).ApiKeyProvider, "ApiKeyProvider was null");
+            Expect.IsNotNull(((ApiSigningKeyResolver)client.ApiSigningKeyResolver).ApiKeyProvider, "ApiKeyProvider was null");
         }
 
         [UnitTest]
         public void SecureServiceProxyClientBaseAddressShouldBeSet()
         {
             string baseAddress = "http://localhost:8989/";
-            SecureServiceProxyClient<Echo> sspc = new SecureServiceProxyClient<Echo>(baseAddress);
+            EncryptedServiceProxyClient<Echo> sspc = new EncryptedServiceProxyClient<Echo>(baseAddress);
             Expect.AreEqual(baseAddress, sspc.BaseAddress);
         }
 
@@ -128,7 +128,7 @@ namespace Bam.Net.ServiceProxy.Tests
         public void PostShouldFireEvents()
         {
             BamServer server;
-            SecureServiceProxyClient<Echo> sspc;
+            EncryptedServiceProxyClient<Echo> sspc;
             ServiceProxyTestHelpers.StartTestServerGetEchoClient(out server, out sspc);
 
             bool? firedIngEvent = false;
@@ -162,7 +162,7 @@ namespace Bam.Net.ServiceProxy.Tests
         public void PostShouldBeCancelable()
         {
             BamServer server;
-            SecureServiceProxyClient<Echo> sspc;
+            EncryptedServiceProxyClient<Echo> sspc;
             ServiceProxyTestHelpers.StartTestServerGetEchoClient(out server, out sspc);
 
             bool? firedIngEvent = false;
@@ -198,7 +198,7 @@ namespace Bam.Net.ServiceProxy.Tests
         public void GetShouldFireEvents()
         {
             BamServer server;
-            SecureServiceProxyClient<Echo> sspc;
+            EncryptedServiceProxyClient<Echo> sspc;
             ServiceProxyTestHelpers.StartTestServerGetEchoClient(out server, out sspc);
 
             bool? firedIngEvent = false;
@@ -232,7 +232,7 @@ namespace Bam.Net.ServiceProxy.Tests
         public void SecureServiceProxyInvokeShouldFireSessionStarting()
         {
             BamServer server;
-            SecureServiceProxyClient<Echo> sspc;
+            EncryptedServiceProxyClient<Echo> sspc;
             ServiceProxyTestHelpers.StartSecureChannelTestServerGetEchoClient(out server, out sspc);
             bool? sessionStartingCalled = false;
             sspc.SessionStarting += (c) =>
@@ -249,7 +249,7 @@ namespace Bam.Net.ServiceProxy.Tests
         public void SecureServiceProxyInvokeShouldEstablishSessionIfSecureChannelServerRegistered()
         {
             BamServer server;
-            SecureServiceProxyClient<Echo> testSecureServiceProxyClient;
+            EncryptedServiceProxyClient<Echo> testSecureServiceProxyClient;
             ServiceProxyTestHelpers.StartSecureChannelTestServerGetEchoClient(out server, out testSecureServiceProxyClient);
 
             Expect.IsFalse(testSecureServiceProxyClient.IsSessionStarted);
@@ -268,7 +268,7 @@ namespace Bam.Net.ServiceProxy.Tests
         public void SecureServiceProxyInvokeShouldSucceed()
         {
             BamServer server;
-            SecureServiceProxyClient<Echo> sspc;
+            EncryptedServiceProxyClient<Echo> sspc;
             ServiceProxyTestHelpers.StartSecureChannelTestServerGetEchoClient(out server, out sspc);
 
             string value = "InputValue_".RandomLetters(8);
@@ -315,7 +315,7 @@ namespace Bam.Net.ServiceProxy.Tests
         public void StartSession()
         {
             BamServer server;
-            SecureServiceProxyClient<Echo> sspc;
+            EncryptedServiceProxyClient<Echo> sspc;
             ServiceProxyTestHelpers.StartSecureChannelTestServerGetEchoClient(out server, out sspc);
 
             sspc.StartClientSessionAsync(new Instant());
@@ -326,7 +326,7 @@ namespace Bam.Net.ServiceProxy.Tests
         public void GetShouldBeCancelable()
         {
             BamServer server;
-            SecureServiceProxyClient<Echo> sspc;
+            EncryptedServiceProxyClient<Echo> sspc;
             ServiceProxyTestHelpers.StartTestServerGetEchoClient(out server, out sspc);
 
             bool? firedIngEvent = false;
@@ -513,10 +513,10 @@ namespace Bam.Net.ServiceProxy.Tests
         {
             Type type = typeof(ApiKeyRequiredEcho);
             Expect.IsTrue(type.HasCustomAttributeOfType<EncryptAttribute>());
-            Expect.IsTrue(type.HasCustomAttributeOfType<ApiKeyRequiredAttribute>());
+            Expect.IsTrue(type.HasCustomAttributeOfType<ApiSigningKeyRequiredAttribute>());
         }
 
-        public class InvalidKeyProvider: ApiKeyProvider
+        public class InvalidKeyProvider: ApiSigningKeyProvider
         {
             public override string GetApplicationClientId(IApplicationNameProvider nameProvider)
             {
@@ -534,7 +534,7 @@ namespace Bam.Net.ServiceProxy.Tests
         {
 			CleanUp();
             BamServer server;
-            ServiceProxyTestHelpers.StartSecureChannelTestServerGetApiKeyRequiredEchoClient(out server, out SecureServiceProxyClient<ApiKeyRequiredEcho> sspc);
+            ServiceProxyTestHelpers.StartSecureChannelTestServerGetApiKeyRequiredEchoClient(out server, out EncryptedServiceProxyClient<ApiKeyRequiredEcho> sspc);
             
             string value = "InputValue_".RandomLetters(8);
             bool? thrown = false;
@@ -543,8 +543,8 @@ namespace Bam.Net.ServiceProxy.Tests
                 thrown = true;
             };
 
-            ApiKeyResolver resolver = new ApiKeyResolver(new InvalidKeyProvider());
-            sspc.ApiKeyResolver = resolver;
+            ApiSigningKeyResolver resolver = new ApiSigningKeyResolver(new InvalidKeyProvider());
+            sspc.ApiSigningKeyResolver = resolver;
             string result = sspc.InvokeServiceMethod<string>("Send", new object[] { value });            
 
             thrown.Value.IsTrue();
@@ -558,10 +558,10 @@ namespace Bam.Net.ServiceProxy.Tests
             string key = "The Api Key Goes Here";
             StaticApiKeyProvider apiKeyProvider = new StaticApiKeyProvider(id, key);
 
-            ApiKeyInfo keyInfo = apiKeyProvider.GetApiKeyInfo(new DefaultConfigurationApplicationNameProvider());
+            ApiSigningKeyInfo keyInfo = apiKeyProvider.GetApiSigningKeyInfo(new DefaultConfigurationApplicationNameProvider());
             
             Expect.AreEqual(id, keyInfo.ApplicationClientId);
-            Expect.AreEqual(key, keyInfo.ApiKey);
+            Expect.AreEqual(key, keyInfo.ApiSigningKey);
         }
 		
         [UnitTest]
@@ -572,11 +572,11 @@ namespace Bam.Net.ServiceProxy.Tests
 
             ServiceProxyTestHelpers.CreateServer(out string baseAddress, out BamServer server);
             ServiceProxyTestHelpers.Servers.Add(server); // makes sure it gets stopped after test run
-            SecureServiceProxyClient<ApiKeyRequiredEcho> sspc = new SecureServiceProxyClient<ApiKeyRequiredEcho>(baseAddress);
+            EncryptedServiceProxyClient<ApiKeyRequiredEcho> sspc = new EncryptedServiceProxyClient<ApiKeyRequiredEcho>(baseAddress);
 
             IApplicationNameProvider nameProvider = null; // TODO: fix this using a substitute from NSubstitute //new TestApplicationNameProvider(methodName);
-            IApiKeyProvider keyProvider = null; // TODO: fix this using a substitute from NSubstitute // new LocalApiKeyProvider();
-            ApiKeyResolver keyResolver = new ApiKeyResolver(keyProvider, nameProvider);
+            IApiSigningKeyProvider keyProvider = null; // TODO: fix this using a substitute from NSubstitute // new LocalApiKeyProvider();
+            ApiSigningKeyResolver keyResolver = new ApiSigningKeyResolver(keyProvider, nameProvider);
 
             SecureChannel channel = new SecureChannel {ApiKeyResolver = keyResolver};
 
@@ -592,7 +592,7 @@ namespace Bam.Net.ServiceProxy.Tests
                 thrown = true;
             };
 
-            sspc.ApiKeyResolver = keyResolver;
+            sspc.ApiSigningKeyResolver = keyResolver;
             string result = sspc.InvokeServiceMethod<string>("Send", new object[] { value });
             
             thrown.Value.IsFalse("Exception was thrown");

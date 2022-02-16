@@ -18,7 +18,7 @@ namespace Bam.Net.CoreServices.Tests
     using Bam.Net.Testing.Unit;
     using Net.Data.SQLite;
     using Server;
-    using ServiceProxySecure = ServiceProxy.Secure;
+    using ServiceProxySecure = ServiceProxy.Encryption;
 
     public interface TestInterface
     {

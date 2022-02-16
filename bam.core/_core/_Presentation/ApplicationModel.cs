@@ -145,7 +145,7 @@ namespace Bam.Net.Presentation
         public IPersistenceModelProvider PersistenceModelProvider { get; set; }
 
         [Inject]
-        public IServiceProxyInvocationResolver ExecutionRequestResolver { get; set; }
+        public IServiceProxyInvocationReader ServiceProxyInvocationReader { get; set; }
 
         public PersistenceModel GetPersistenceModel(string persistenceModelName)
         {

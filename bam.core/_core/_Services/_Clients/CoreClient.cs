@@ -27,8 +27,8 @@ namespace Bam.Net.Services.Clients
     /// A client to the core bam service server.
     /// </summary>
     /// <seealso cref="Bam.Net.Logging.Loggable" />
-    /// <seealso cref="Bam.Net.ServiceProxy.Encryption.IApiKeyResolver" />
-    /// <seealso cref="Bam.Net.ServiceProxy.Encryption.IApiKeyProvider" />
+    /// <seealso cref="Bam.Net.ServiceProxy.Encryption.IApiSigningKeyResolver" />
+    /// <seealso cref="Bam.Net.ServiceProxy.Encryption.IApiSigningKeyProvider" />
     /// <seealso cref="Bam.Net.IApplicationNameProvider" />
     public partial class CoreClient // core
     {

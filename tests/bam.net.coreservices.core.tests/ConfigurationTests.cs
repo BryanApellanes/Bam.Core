@@ -17,7 +17,7 @@ namespace Bam.Net.CoreServices.Tests
     using Bam.Net.CoreServices.ApplicationRegistration.Data;
     using Net.Data.SQLite;
     using Server;
-    using ServiceProxySecure = ServiceProxy.Secure;
+    using ServiceProxySecure = ServiceProxy.Encryption;
     using Bam.Net.Testing.Unit;
     using System.Collections.Specialized;
     using Bam.Net.Web;

@@ -178,34 +178,34 @@ namespace Bam.Net.ServiceProxy.Tests
         public static HashSet<BamServer> Servers { get; }
 
         // TODO: this crap needs to be refactored, oh my
-        public static void StartTestServerGetEchoClient(out BamServer server, out SecureServiceProxyClient<Echo> sspc)
+        public static void StartTestServerGetEchoClient(out BamServer server, out EncryptedServiceProxyClient<Echo> sspc)
         {
             StartTestServer(out string baseAddress, out server);
-            sspc = new SecureServiceProxyClient<Echo>(baseAddress);
+            sspc = new EncryptedServiceProxyClient<Echo>(baseAddress);
         }
 
-        public static void StartSecureChannelTestServerGetApiKeyRequiredEchoClient(out BamServer server, out SecureServiceProxyClient<ApiKeyRequiredEcho> sspc)
+        public static void StartSecureChannelTestServerGetApiKeyRequiredEchoClient(out BamServer server, out EncryptedServiceProxyClient<ApiKeyRequiredEcho> sspc)
         {
             StartTestServer<SecureChannel, ApiKeyRequiredEcho>(out string baseAddress, out server);
-            sspc = new SecureServiceProxyClient<ApiKeyRequiredEcho>(baseAddress);
+            sspc = new EncryptedServiceProxyClient<ApiKeyRequiredEcho>(baseAddress);
         }
 
-        public static void StartSecureChannelTestServerGetEchoClient(out BamServer server, out SecureServiceProxyClient<Echo> sspc)
+        public static void StartSecureChannelTestServerGetEchoClient(out BamServer server, out EncryptedServiceProxyClient<Echo> sspc)
         {
             StartTestServer<SecureChannel, Echo>(out string baseAddress, out server);
-            sspc = new SecureServiceProxyClient<Echo>(baseAddress);
+            sspc = new EncryptedServiceProxyClient<Echo>(baseAddress);
         }
 
-        public static void StartSecureChannelTestServerGetEncryptedEchoClient(out BamServer server, out SecureServiceProxyClient<EncryptedEcho> sspc)
+        public static void StartSecureChannelTestServerGetEncryptedEchoClient(out BamServer server, out EncryptedServiceProxyClient<EncryptedEcho> sspc)
         {
             StartTestServer<SecureChannel, EncryptedEcho>(out string baseAddress, out server);
-            sspc = new SecureServiceProxyClient<EncryptedEcho>(baseAddress);
+            sspc = new EncryptedServiceProxyClient<EncryptedEcho>(baseAddress);
         }
 
-        public static void StartSecureChannelTestServerGetClient<T>(out BamServer server, out SecureServiceProxyClient<T> sspc)
+        public static void StartSecureChannelTestServerGetClient<T>(out BamServer server, out EncryptedServiceProxyClient<T> sspc)
         {
             StartTestServer<SecureChannel, T>(out string baseAddress, out server);
-            sspc = new SecureServiceProxyClient<T>(baseAddress);
+            sspc = new EncryptedServiceProxyClient<T>(baseAddress);
         }
 
         public static void StartTestServer(out string baseAddress, out BamServer server)

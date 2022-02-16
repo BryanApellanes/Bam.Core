@@ -277,7 +277,7 @@ namespace Bam.Net.Tests
 
             GZipByteTransformer gZipByteTransformer = new GZipByteTransformer();
 
-            ValueTranformerPipeline<TestMonkey> transformer = new ValueTranformerPipeline<TestMonkey>();
+            ValueTransformerPipeline<TestMonkey> transformer = new ValueTransformerPipeline<TestMonkey>();
 
             transformer.Add(aesByteTransformer);            
             transformer.Add(gZipByteTransformer);
