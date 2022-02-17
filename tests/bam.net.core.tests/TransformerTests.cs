@@ -1,5 +1,6 @@
 ﻿using Bam.Net.CommandLine;
 using Bam.Net.Encryption;
+using Bam.Net.ServiceProxy;
 using Bam.Net.ServiceProxy.Data;
 using Bam.Net.ServiceProxy.Data.Dao.Repository;
 using Bam.Net.ServiceProxy.Encryption;
@@ -294,6 +295,55 @@ namespace Bam.Net.Tests
 
             Expect.AreEqual(bob.Name, reversed.Name);
             Expect.AreEqual(bob.TailCount, reversed.TailCount);
+        }
+
+        [UnitTest]
+        public void SecureChannelMessageSymmetricEncryptionAndDecryption()
+        {
+            AesKeyVectorPair aesKeyVectorPair = new AesKeyVectorPair();
+            SecureChannelRequestMessageSymmetricEncryptor encryptor = new SecureChannelRequestMessageSymmetricEncryptor(aesKeyVectorPair);
+            ServiceProxyClient serviceProxyClient = new ServiceProxyClient<Echo>();
+            ServiceProxyInvocationRequest serviceProxyInvocationRequest = new ServiceProxyInvocationRequest(serviceProxyClient, "Echo", "Send", "test string");
+            SecureChannelRequestMessage secureChannelRequestMessage = new SecureChannelRequestMessage(serviceProxyInvocationRequest);
+
+            Expect.AreEqual("Echo", secureChannelRequestMessage.ClassName);
+            Expect.AreEqual("Send", secureChannelRequestMessage.MethodName);
+            Expect.IsNotNullOrEmpty(secureChannelRequestMessage.JsonArgs);
+
+            byte[] encrypted = encryptor.Encrypt(secureChannelRequestMessage);
+
+            IDecryptor<SecureChannelRequestMessage> decryptor = encryptor.GetDecryptor();
+
+            SecureChannelRequestMessage decrypted = decryptor.Decrypt(encrypted);
+
+            Expect.AreEqual(decrypted.ClassName, secureChannelRequestMessage.ClassName);
+            Expect.AreEqual(decrypted.MethodName, secureChannelRequestMessage.MethodName);
+            Expect.AreEqual(decrypted.JsonArgs, secureChannelRequestMessage.JsonArgs);
+        }
+
+
+        [UnitTest]
+        public void SecureChannelMessageAsymmetricEncryptionAndDecryption()
+        {
+            RsaPublicPrivateKeyPair rsaPublicPrivateKeyPair = new RsaPublicPrivateKeyPair();
+            SecureChannelRequestMessageAsymmetricEncryptor encryptor = new SecureChannelRequestMessageAsymmetricEncryptor(rsaPublicPrivateKeyPair);
+            ServiceProxyClient serviceProxyClient = new ServiceProxyClient<Echo>();
+            ServiceProxyInvocationRequest serviceProxyInvocationRequest = new ServiceProxyInvocationRequest(serviceProxyClient, "Echo", "Send", "test string");
+            SecureChannelRequestMessage secureChannelRequestMessage = new SecureChannelRequestMessage(serviceProxyInvocationRequest);
+
+            Expect.AreEqual("Echo", secureChannelRequestMessage.ClassName);
+            Expect.AreEqual("Send", secureChannelRequestMessage.MethodName);
+            Expect.IsNotNullOrEmpty(secureChannelRequestMessage.JsonArgs);
+
+            byte[] encrypted = encryptor.Encrypt(secureChannelRequestMessage);
+
+            IDecryptor<SecureChannelRequestMessage> decryptor = encryptor.GetDecryptor();
+
+            SecureChannelRequestMessage decrypted = decryptor.Decrypt(encrypted);
+
+            Expect.AreEqual(decrypted.ClassName, secureChannelRequestMessage.ClassName);
+            Expect.AreEqual(decrypted.MethodName, secureChannelRequestMessage.MethodName);
+            Expect.AreEqual(decrypted.JsonArgs, secureChannelRequestMessage.JsonArgs);
         }
     }
 }
