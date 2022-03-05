@@ -274,8 +274,8 @@ namespace Bam.Net.Tests
         [UnitTest]
         public void PipelineShouldTransformAndReverse()
         {
-            AesKeyVectorPair aesKey1 = new AesKeyVectorPair();
-            AesByteTransformer aesByteTransformer = new AesByteTransformer(aesKey1);
+            AesKeyVectorPair aesKey = new AesKeyVectorPair();
+            AesByteTransformer aesByteTransformer = new AesByteTransformer(aesKey);
 
             GZipByteTransformer gZipByteTransformer = new GZipByteTransformer();
 
@@ -297,6 +297,72 @@ namespace Bam.Net.Tests
             Expect.AreEqual(bob.Name, reversed.Name);
             Expect.AreEqual(bob.TailCount, reversed.TailCount);
         }
+
+        [UnitTest]
+        public void SymmetricEncryptorEncryptAndDecryptStringTest()
+        {
+            AesKeyVectorPair aesKey = new AesKeyVectorPair();
+            SymmetricEncryptor<TestMonkey> encryptor = new SymmetricEncryptor<TestMonkey>(aesKey);
+
+            string testValue = $"this is the test value {Guid.NewGuid()}";
+            string cipherString = encryptor.Encrypt(testValue);            
+
+            IDecryptor<TestMonkey> decryptor = encryptor.GetDecryptor();
+            
+            string decipheredString = decryptor.Decrypt(cipherString);
+            Expect.AreEqual(testValue, decipheredString);
+        }
+
+        [UnitTest]
+        public void SymmetricEncryptorEncryptAndDecryptBytesTest()
+        {
+            AesKeyVectorPair aesKey = new AesKeyVectorPair();
+            SymmetricEncryptor<TestMonkey> encryptor = new SymmetricEncryptor<TestMonkey>(aesKey);
+
+            string testValue = $"this is the test value {Guid.NewGuid()}";
+            byte[] utf8 = Encoding.UTF8.GetBytes(testValue);
+
+            IDecryptor<TestMonkey> decryptor = encryptor.GetDecryptor();
+            
+            byte[] cipherBytes = encryptor.EncryptBytes(utf8);
+            byte[] decipheredBytes = decryptor.DecryptBytes(cipherBytes);
+            string deciphered = Encoding.UTF8.GetString(decipheredBytes);
+            Expect.AreEqual(testValue, deciphered);
+        }
+
+
+        [UnitTest]
+        public void AsymmetricEncryptorEncryptAndDecryptStringTest()
+        {
+            RsaPublicPrivateKeyPair rsaPublicPrivateKeyPair = new RsaPublicPrivateKeyPair();
+            AsymmetricEncryptor<TestMonkey> encryptor = new AsymmetricEncryptor<TestMonkey>(rsaPublicPrivateKeyPair);
+
+            string testValue = $"this is the test value {Guid.NewGuid()}";
+            string cipherString = encryptor.Encrypt(testValue);
+
+            IDecryptor<TestMonkey> decryptor = encryptor.GetDecryptor();
+
+            string decipheredString = decryptor.Decrypt(cipherString);
+            Expect.AreEqual(testValue, decipheredString);
+        }
+
+        [UnitTest]
+        public void AsymmetricEncryptorEncryptAndDecryptBytesTest()
+        {
+            RsaPublicPrivateKeyPair rsaPublicPrivateKeyPair = new RsaPublicPrivateKeyPair();
+            AsymmetricEncryptor<TestMonkey> encryptor = new AsymmetricEncryptor<TestMonkey>(rsaPublicPrivateKeyPair);
+
+            string testValue = $"this is the test value {Guid.NewGuid()}";
+            byte[] utf8 = Encoding.UTF8.GetBytes(testValue);
+
+            IDecryptor<TestMonkey> decryptor = encryptor.GetDecryptor();
+
+            byte[] cipherBytes = encryptor.EncryptBytes(utf8);
+            byte[] decipheredBytes = decryptor.DecryptBytes(cipherBytes);
+            string deciphered = Encoding.UTF8.GetString(decipheredBytes);
+            Expect.AreEqual(testValue, deciphered);
+        }
+
 
         [UnitTest]
         public void SecureChannelMessageSymmetricEncryptionAndDecryption()

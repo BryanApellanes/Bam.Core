@@ -113,7 +113,7 @@ namespace Bam.Net.ServiceProxy.Tests
         public void ApiKeyProviderShouldNotBeNull()
         {
             TestApiKeyClient client = new TestApiKeyClient();
-            Expect.IsNotNull(((ApiSigningKeyResolver)client.ApiSigningKeyResolver).ApiSigningKeyProvider, "ApiKeyProvider was null");
+            Expect.IsNotNull(((ApiHmacKeyResolver)client.ApiSigningKeyResolver).ApiSigningKeyProvider, "ApiKeyProvider was null");
         }
 
         [UnitTest]
@@ -543,7 +543,7 @@ namespace Bam.Net.ServiceProxy.Tests
                 thrown = true;
             };
 
-            ApiSigningKeyResolver resolver = new ApiSigningKeyResolver(new InvalidKeyProvider());
+            ApiHmacKeyResolver resolver = new ApiHmacKeyResolver(new InvalidKeyProvider());
             sspc.ApiSigningKeyResolver = resolver;
             string result = sspc.InvokeServiceMethod<string>("Send", new object[] { value });            
 
@@ -576,9 +576,9 @@ namespace Bam.Net.ServiceProxy.Tests
 
             IApplicationNameProvider nameProvider = null; // TODO: fix this using a substitute from NSubstitute //new TestApplicationNameProvider(methodName);
             IApiHmacKeyProvider keyProvider = null; // TODO: fix this using a substitute from NSubstitute // new LocalApiKeyProvider();
-            ApiSigningKeyResolver keyResolver = new ApiSigningKeyResolver(keyProvider, nameProvider);
+            ApiHmacKeyResolver keyResolver = new ApiHmacKeyResolver(keyProvider, nameProvider);
 
-            SecureChannel channel = new SecureChannel {ApiKeyResolver = keyResolver};
+            SecureChannel channel = new SecureChannel {ApiHmacKeyResolver = keyResolver};
 
             server.AddCommonService<SecureChannel>(channel);
             server.AddCommonService<ApiKeyRequiredEcho>();
