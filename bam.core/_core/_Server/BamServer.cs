@@ -5,7 +5,6 @@ using System.Text;
 using System.ServiceProcess;
 using Bam.Net.Presentation.Html;
 using Bam.Net.Logging;
-using Bam.Net;
 using Bam.Net.Incubation;
 using System.Threading;
 using System.Threading.Tasks;

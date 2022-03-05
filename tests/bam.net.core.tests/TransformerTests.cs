@@ -9,6 +9,7 @@ using Org.BouncyCastle.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -301,7 +302,7 @@ namespace Bam.Net.Tests
         public void SecureChannelMessageSymmetricEncryptionAndDecryption()
         {
             AesKeyVectorPair aesKeyVectorPair = new AesKeyVectorPair();
-            SecureChannelRequestMessageSymmetricEncryptor encryptor = new SecureChannelRequestMessageSymmetricEncryptor(aesKeyVectorPair);
+            SymmetricEncryptor<SecureChannelRequestMessage> encryptor = new SymmetricEncryptor<SecureChannelRequestMessage>(aesKeyVectorPair);
             ServiceProxyClient serviceProxyClient = new ServiceProxyClient<Echo>();
             ServiceProxyInvocationRequest serviceProxyInvocationRequest = new ServiceProxyInvocationRequest(serviceProxyClient, "Echo", "Send", "test string");
             SecureChannelRequestMessage secureChannelRequestMessage = new SecureChannelRequestMessage(serviceProxyInvocationRequest);
@@ -326,7 +327,7 @@ namespace Bam.Net.Tests
         public void SecureChannelMessageAsymmetricEncryptionAndDecryption()
         {
             RsaPublicPrivateKeyPair rsaPublicPrivateKeyPair = new RsaPublicPrivateKeyPair();
-            SecureChannelRequestMessageAsymmetricEncryptor encryptor = new SecureChannelRequestMessageAsymmetricEncryptor(rsaPublicPrivateKeyPair);
+            AsymmetricEncryptor<SecureChannelRequestMessage> encryptor = new AsymmetricEncryptor<SecureChannelRequestMessage>(rsaPublicPrivateKeyPair);
             ServiceProxyClient serviceProxyClient = new ServiceProxyClient<Echo>();
             ServiceProxyInvocationRequest serviceProxyInvocationRequest = new ServiceProxyInvocationRequest(serviceProxyClient, "Echo", "Send", "test string");
             SecureChannelRequestMessage secureChannelRequestMessage = new SecureChannelRequestMessage(serviceProxyInvocationRequest);

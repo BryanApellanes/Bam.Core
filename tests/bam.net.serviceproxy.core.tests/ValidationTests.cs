@@ -53,7 +53,7 @@ namespace Bam.Net.ServiceProxy.Tests
             SecureSession session = SecureSession.Get(context);
             string postString = null; // TODO: fix this //  ApiArgumentEncoder.ParametersToJsonParamsObjectString("random information");
 
-            EncryptedValidationToken token = ApiEncryptionValidation.CreateEncryptedValidationToken(postString, session);
+            EncryptedValidationToken token = ApiValidation.CreateEncryptedValidationToken(postString, session);
         }
 
         public static void Prepare()
@@ -110,7 +110,7 @@ namespace Bam.Net.ServiceProxy.Tests
 
             DateTime tenMinutesAgo = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(10));
             Instant nonce = new Instant(tenMinutesAgo);
-            EncryptedTokenValidationStatus status = ApiEncryptionValidation.ValidateNonce(nonce.ToString(), 5);
+            EncryptedTokenValidationStatus status = ApiValidation.ValidateNonce(nonce.ToString(), 5);
             Expect.IsFalse(status == EncryptedTokenValidationStatus.Success);
             Expect.AreEqual(EncryptedTokenValidationStatus.NonceFailed, status);
         }

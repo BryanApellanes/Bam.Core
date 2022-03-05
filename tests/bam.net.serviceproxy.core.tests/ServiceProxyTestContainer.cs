@@ -113,7 +113,7 @@ namespace Bam.Net.ServiceProxy.Tests
         public void ApiKeyProviderShouldNotBeNull()
         {
             TestApiKeyClient client = new TestApiKeyClient();
-            Expect.IsNotNull(((ApiSigningKeyResolver)client.ApiSigningKeyResolver).ApiKeyProvider, "ApiKeyProvider was null");
+            Expect.IsNotNull(((ApiSigningKeyResolver)client.ApiSigningKeyResolver).ApiSigningKeyProvider, "ApiKeyProvider was null");
         }
 
         [UnitTest]
@@ -513,17 +513,17 @@ namespace Bam.Net.ServiceProxy.Tests
         {
             Type type = typeof(ApiKeyRequiredEcho);
             Expect.IsTrue(type.HasCustomAttributeOfType<EncryptAttribute>());
-            Expect.IsTrue(type.HasCustomAttributeOfType<ApiSigningKeyRequiredAttribute>());
+            Expect.IsTrue(type.HasCustomAttributeOfType<ApiHmacKeyRequiredAttribute>());
         }
 
-        public class InvalidKeyProvider: ApiSigningKeyProvider
+        public class InvalidKeyProvider: ApiHmacKeyProvider
         {
             public override string GetApplicationClientId(IApplicationNameProvider nameProvider)
             {
                 return "InvalidClientId_".RandomLetters(8);
             }
 
-            public override string GetApplicationApiKey(string applicationClientId, int index)
+            public override string GetApplicationApiSigningKey(string applicationClientId, int index)
             {
                 return "InvalidApiKey_".RandomLetters(4);
             }
@@ -558,10 +558,10 @@ namespace Bam.Net.ServiceProxy.Tests
             string key = "The Api Key Goes Here";
             StaticApiKeyProvider apiKeyProvider = new StaticApiKeyProvider(id, key);
 
-            ApiSigningKeyInfo keyInfo = apiKeyProvider.GetApiSigningKeyInfo(new DefaultConfigurationApplicationNameProvider());
+            ApiHmacKeyInfo keyInfo = apiKeyProvider.GetApiHmacKeyInfo(new DefaultConfigurationApplicationNameProvider());
             
             Expect.AreEqual(id, keyInfo.ApplicationClientId);
-            Expect.AreEqual(key, keyInfo.ApiSigningKey);
+            Expect.AreEqual(key, keyInfo.ApiHmacKey);
         }
 		
         [UnitTest]
@@ -575,7 +575,7 @@ namespace Bam.Net.ServiceProxy.Tests
             EncryptedServiceProxyClient<ApiKeyRequiredEcho> sspc = new EncryptedServiceProxyClient<ApiKeyRequiredEcho>(baseAddress);
 
             IApplicationNameProvider nameProvider = null; // TODO: fix this using a substitute from NSubstitute //new TestApplicationNameProvider(methodName);
-            IApiSigningKeyProvider keyProvider = null; // TODO: fix this using a substitute from NSubstitute // new LocalApiKeyProvider();
+            IApiHmacKeyProvider keyProvider = null; // TODO: fix this using a substitute from NSubstitute // new LocalApiKeyProvider();
             ApiSigningKeyResolver keyResolver = new ApiSigningKeyResolver(keyProvider, nameProvider);
 
             SecureChannel channel = new SecureChannel {ApiKeyResolver = keyResolver};
