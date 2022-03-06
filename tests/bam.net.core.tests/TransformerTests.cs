@@ -305,11 +305,11 @@ namespace Bam.Net.Tests
             SymmetricEncryptor<TestMonkey> encryptor = new SymmetricEncryptor<TestMonkey>(aesKey);
 
             string testValue = $"this is the test value {Guid.NewGuid()}";
-            string cipherString = encryptor.Encrypt(testValue);            
+            string cipherString = encryptor.EncryptString(testValue);            
 
             IDecryptor<TestMonkey> decryptor = encryptor.GetDecryptor();
             
-            string decipheredString = decryptor.Decrypt(cipherString);
+            string decipheredString = decryptor.DecryptString(cipherString);
             Expect.AreEqual(testValue, decipheredString);
         }
 
@@ -338,11 +338,11 @@ namespace Bam.Net.Tests
             AsymmetricEncryptor<TestMonkey> encryptor = new AsymmetricEncryptor<TestMonkey>(rsaPublicPrivateKeyPair);
 
             string testValue = $"this is the test value {Guid.NewGuid()}";
-            string cipherString = encryptor.Encrypt(testValue);
+            string cipherString = encryptor.EncryptString(testValue);
 
             IDecryptor<TestMonkey> decryptor = encryptor.GetDecryptor();
 
-            string decipheredString = decryptor.Decrypt(cipherString);
+            string decipheredString = decryptor.DecryptString(cipherString);
             Expect.AreEqual(testValue, decipheredString);
         }
 
