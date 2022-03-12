@@ -302,7 +302,7 @@ namespace Bam.Net.Tests
         public void SymmetricEncryptorEncryptAndDecryptStringTest()
         {
             AesKeyVectorPair aesKey = new AesKeyVectorPair();
-            SymmetricEncryptor<TestMonkey> encryptor = new SymmetricEncryptor<TestMonkey>(aesKey);
+            SymmetricDataEncryptor<TestMonkey> encryptor = new SymmetricDataEncryptor<TestMonkey>(aesKey);
 
             string testValue = $"this is the test value {Guid.NewGuid()}";
             string cipherString = encryptor.EncryptString(testValue);            
@@ -317,7 +317,7 @@ namespace Bam.Net.Tests
         public void SymmetricEncryptorEncryptAndDecryptBytesTest()
         {
             AesKeyVectorPair aesKey = new AesKeyVectorPair();
-            SymmetricEncryptor<TestMonkey> encryptor = new SymmetricEncryptor<TestMonkey>(aesKey);
+            SymmetricDataEncryptor<TestMonkey> encryptor = new SymmetricDataEncryptor<TestMonkey>(aesKey);
 
             string testValue = $"this is the test value {Guid.NewGuid()}";
             byte[] utf8 = Encoding.UTF8.GetBytes(testValue);
@@ -335,7 +335,7 @@ namespace Bam.Net.Tests
         public void AsymmetricEncryptorEncryptAndDecryptStringTest()
         {
             RsaPublicPrivateKeyPair rsaPublicPrivateKeyPair = new RsaPublicPrivateKeyPair();
-            AsymmetricEncryptor<TestMonkey> encryptor = new AsymmetricEncryptor<TestMonkey>(rsaPublicPrivateKeyPair);
+            AsymmetricDataEncryptor<TestMonkey> encryptor = new AsymmetricDataEncryptor<TestMonkey>(rsaPublicPrivateKeyPair);
 
             string testValue = $"this is the test value {Guid.NewGuid()}";
             string cipherString = encryptor.EncryptString(testValue);
@@ -350,7 +350,7 @@ namespace Bam.Net.Tests
         public void AsymmetricEncryptorEncryptAndDecryptBytesTest()
         {
             RsaPublicPrivateKeyPair rsaPublicPrivateKeyPair = new RsaPublicPrivateKeyPair();
-            AsymmetricEncryptor<TestMonkey> encryptor = new AsymmetricEncryptor<TestMonkey>(rsaPublicPrivateKeyPair);
+            AsymmetricDataEncryptor<TestMonkey> encryptor = new AsymmetricDataEncryptor<TestMonkey>(rsaPublicPrivateKeyPair);
 
             string testValue = $"this is the test value {Guid.NewGuid()}";
             byte[] utf8 = Encoding.UTF8.GetBytes(testValue);
@@ -368,7 +368,7 @@ namespace Bam.Net.Tests
         public void SecureChannelMessageSymmetricEncryptionAndDecryption()
         {
             AesKeyVectorPair aesKeyVectorPair = new AesKeyVectorPair();
-            SymmetricEncryptor<SecureChannelRequestMessage> encryptor = new SymmetricEncryptor<SecureChannelRequestMessage>(aesKeyVectorPair);
+            SymmetricDataEncryptor<SecureChannelRequestMessage> encryptor = new SymmetricDataEncryptor<SecureChannelRequestMessage>(aesKeyVectorPair);
             ServiceProxyClient serviceProxyClient = new ServiceProxyClient<Echo>();
             ServiceProxyInvocationRequest serviceProxyInvocationRequest = new ServiceProxyInvocationRequest(serviceProxyClient, "Echo", "Send", "test string");
             SecureChannelRequestMessage secureChannelRequestMessage = new SecureChannelRequestMessage(serviceProxyInvocationRequest);
@@ -393,7 +393,7 @@ namespace Bam.Net.Tests
         public void SecureChannelMessageAsymmetricEncryptionAndDecryption()
         {
             RsaPublicPrivateKeyPair rsaPublicPrivateKeyPair = new RsaPublicPrivateKeyPair();
-            AsymmetricEncryptor<SecureChannelRequestMessage> encryptor = new AsymmetricEncryptor<SecureChannelRequestMessage>(rsaPublicPrivateKeyPair);
+            AsymmetricDataEncryptor<SecureChannelRequestMessage> encryptor = new AsymmetricDataEncryptor<SecureChannelRequestMessage>(rsaPublicPrivateKeyPair);
             ServiceProxyClient serviceProxyClient = new ServiceProxyClient<Echo>();
             ServiceProxyInvocationRequest serviceProxyInvocationRequest = new ServiceProxyInvocationRequest(serviceProxyClient, "Echo", "Send", "test string");
             SecureChannelRequestMessage secureChannelRequestMessage = new SecureChannelRequestMessage(serviceProxyInvocationRequest);

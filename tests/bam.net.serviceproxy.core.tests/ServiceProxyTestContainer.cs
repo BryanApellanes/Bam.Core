@@ -113,7 +113,7 @@ namespace Bam.Net.ServiceProxy.Tests
         public void ApiKeyProviderShouldNotBeNull()
         {
             TestApiKeyClient client = new TestApiKeyClient();
-            Expect.IsNotNull(((ApiHmacKeyResolver)client.ApiSigningKeyResolver).ApiSigningKeyProvider, "ApiKeyProvider was null");
+            Expect.IsNotNull(((ApiHmacKeyResolver)client.ApiHmacKeyResolver).ApiHmacKeyProvider, "ApiKeyProvider was null");
         }
 
         [UnitTest]
@@ -523,7 +523,7 @@ namespace Bam.Net.ServiceProxy.Tests
                 return "InvalidClientId_".RandomLetters(8);
             }
 
-            public override string GetApplicationApiSigningKey(string applicationClientId, int index)
+            public override string GetApplicationApiHmacKey(string applicationClientId, int index)
             {
                 return "InvalidApiKey_".RandomLetters(4);
             }
@@ -544,7 +544,7 @@ namespace Bam.Net.ServiceProxy.Tests
             };
 
             ApiHmacKeyResolver resolver = new ApiHmacKeyResolver(new InvalidKeyProvider());
-            sspc.ApiSigningKeyResolver = resolver;
+            sspc.ApiHmacKeyResolver = resolver;
             string result = sspc.InvokeServiceMethod<string>("Send", new object[] { value });            
 
             thrown.Value.IsTrue();
@@ -592,7 +592,7 @@ namespace Bam.Net.ServiceProxy.Tests
                 thrown = true;
             };
 
-            sspc.ApiSigningKeyResolver = keyResolver;
+            sspc.ApiHmacKeyResolver = keyResolver;
             string result = sspc.InvokeServiceMethod<string>("Send", new object[] { value });
             
             thrown.Value.IsFalse("Exception was thrown");
