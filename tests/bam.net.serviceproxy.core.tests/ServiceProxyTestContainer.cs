@@ -99,7 +99,7 @@ namespace Bam.Net.ServiceProxy.Tests
 
             public void TestStartSession()
             {
-                base.StartClientSessionAsync(new Instant());
+                _ = base.StartClientSessionAsync(new Instant());
             }
         }
 
