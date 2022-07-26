@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Automation\Scripting\CSharpScriptContext.hbs" />
+    <Compile Include="..\submodules\bam.net.shared\Encryption\IEncryptedHttpRequest.cs" Link="IEncryptedHttpRequest.cs" />
     <Compile Include="..\submodules\bam.net.shared\Encryption\IHttpRequestHeaderEncryptor.cs" Link="IHttpRequestHeaderEncryptor.cs" />
     <EmbeddedResource Include="Automation\Scripting\CSharpScriptContext.hbs" />    
   </ItemGroup>
