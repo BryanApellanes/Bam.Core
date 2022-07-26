@@ -124,6 +124,8 @@ namespace Bam.Net.UserAccounts.Tests
             get { throw new NotImplementedException(); }
         }
 
+        public string Content { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         #endregion
     }
 

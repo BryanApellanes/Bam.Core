@@ -31,7 +31,7 @@ namespace Bam.Net.Server
     /// </summary>
     public partial class BamServer // core
     {
-        protected void PreProcessRequest(HttpListenerContext context)
+        protected void PreProcessRequest(IHttpContext context)
         {
             if (context?.Request == null)
             {
@@ -39,13 +39,18 @@ namespace Bam.Net.Server
             }
 
             context.SetRequestId();
-            RequestLog.LogRequest(new HttpContextWrapper(context));
+            RequestLog.LogRequest(context);
         }
         
-        protected void ProcessRequest(HttpListenerContext context)
+        protected void ProcessRequest(IHttpContext context)
+        {
+            HandleRequestAsync(context);
+        }
+
+/*        protected void ProcessRequest(HttpListenerContext context)
         {
             HandleRequestAsync(new HttpContextWrapper(context));
-        }
+        }*/
 
         private void HandleException(IHttpContext context, Exception ex)
         {

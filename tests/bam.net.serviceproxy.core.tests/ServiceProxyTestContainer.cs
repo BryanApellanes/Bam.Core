@@ -257,8 +257,8 @@ namespace Bam.Net.ServiceProxy.Tests
             string result = testSecureServiceProxyClient.InvokeServiceMethod<string>("Send", new object[] { value });
             server.Stop();
 
-            string msg = testSecureServiceProxyClient.SessionStartException != null ? testSecureServiceProxyClient.SessionStartException.Message : string.Empty;
-            Expect.IsNull(testSecureServiceProxyClient.SessionStartException, "SessionStartException: {0}"._Format(msg));
+            string msg = testSecureServiceProxyClient.StartSessionException != null ? testSecureServiceProxyClient.StartSessionException.Message : string.Empty;
+            Expect.IsNull(testSecureServiceProxyClient.StartSessionException, "SessionStartException: {0}"._Format(msg));
             Expect.IsTrue(testSecureServiceProxyClient.IsSessionStarted, "Session was not established");
 
             server.Stop();
@@ -312,13 +312,13 @@ namespace Bam.Net.ServiceProxy.Tests
         }
 
         [UnitTest]
-        public void StartSession()
+        public async void StartSession()
         {
             BamServer server;
             EncryptedServiceProxyClient<Echo> sspc;
             ServiceProxyTestHelpers.StartSecureChannelTestServerGetEchoClient(out server, out sspc);
 
-            sspc.StartClientSessionAsync(new Instant());
+            await sspc.StartClientSessionAsync(new Instant());
             server.Stop();
         }
         

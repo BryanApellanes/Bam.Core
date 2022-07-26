@@ -163,6 +163,8 @@ namespace Bam.Net.ServiceProxy.Tests
                 get { throw new NotImplementedException(); }
             }
 
+            public string Content { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
             #endregion
         }
 

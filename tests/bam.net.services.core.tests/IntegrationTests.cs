@@ -77,7 +77,7 @@ namespace Bam.Net.Services.Tests
             Expect.IsFalse(one.GetHashCode().Equals(three.GetHashCode()));
             Expect.IsFalse(two.GetHashCode().Equals(three.GetHashCode()));
 
-            OutLine(one.GetLongKeyHash().ToString());
+            Message.PrintLine(one.GetLongKeyHash().ToString());
         }
 
 

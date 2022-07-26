@@ -113,7 +113,7 @@ namespace Bam.Net.Tests
             int hashed = randomString.ToSha1Int();
             int again = randomString.ToSha1Int();
 
-            OutLine(again.ToString(), ConsoleColor.Cyan);
+            Message.PrintLine(again.ToString(), ConsoleColor.Cyan);
             Expect.AreEqual(hashed, again);
         }
 
@@ -124,7 +124,7 @@ namespace Bam.Net.Tests
             long hashed = randomString.ToSha1Long();
             long again = randomString.ToSha1Long();
 
-            OutLine(again.ToString(), ConsoleColor.Cyan);
+            Message.PrintLine(again.ToString(), ConsoleColor.Cyan);
             Expect.AreEqual(hashed, again);
         }
 
@@ -144,25 +144,25 @@ namespace Bam.Net.Tests
         [BeforeUnitTests]
         public void BeforeTests()
         {
-            OutLine("BeforeUnitTests", ConsoleColor.Green);
+            Message.PrintLine("BeforeUnitTests", ConsoleColor.Green);
         }
 
         [BeforeEachUnitTest]
         public void BeforeEach()
         {
-            OutLine("BeforeEach", ConsoleColor.DarkGreen);
+            Message.PrintLine("BeforeEach", ConsoleColor.DarkGreen);
         }
 
         [AfterUnitTests]
         public void AfterTests()
         {
-            OutLine("AfterTests", ConsoleColor.DarkCyan);
+            Message.PrintLine("AfterTests", ConsoleColor.DarkCyan);
         }
 
         [AfterEachUnitTest]
         public void AfterEach()
         {
-            OutLine("AfterEach", ConsoleColor.DarkBlue);
+            Message.PrintLine("AfterEach", ConsoleColor.DarkBlue);
         }
 
         [UnitTest]
@@ -172,7 +172,7 @@ namespace Bam.Net.Tests
             long hashed = text.ToSha256Long();
             long again = text.ToSha256Long();
 
-            OutLine(again.ToString(), ConsoleColor.Cyan);
+            Message.PrintLine(again.ToString(), ConsoleColor.Cyan);
             Expect.AreEqual(hashed, again);
             Expect.AreEqual(expected, hashed);
             Expect.AreEqual(expected, again);
@@ -181,13 +181,13 @@ namespace Bam.Net.Tests
         [UnitTest]
         public void NLogLogLevelNames()
         {
-            OutLine(NLog.LogLevel.Trace.Name);
-            OutLine(NLog.LogLevel.Debug.Name);
-            OutLine(NLog.LogLevel.Info.Name);
-            OutLine(NLog.LogLevel.Warn.Name);
-            OutLine(NLog.LogLevel.Error.Name);
-            OutLine(NLog.LogLevel.Fatal.Name);
-            OutLine(NLog.LogLevel.Off.Name);
+            Message.PrintLine(NLog.LogLevel.Trace.Name);
+            Message.PrintLine(NLog.LogLevel.Debug.Name);
+            Message.PrintLine(NLog.LogLevel.Info.Name);
+            Message.PrintLine(NLog.LogLevel.Warn.Name);
+            Message.PrintLine(NLog.LogLevel.Error.Name);
+            Message.PrintLine(NLog.LogLevel.Fatal.Name);
+            Message.PrintLine(NLog.LogLevel.Off.Name);
         }
     }
 }

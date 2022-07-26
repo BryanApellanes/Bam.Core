@@ -20,7 +20,7 @@ using Bam.Net.Web;
 using Bam.Net.Server;
 using Bam.Net.ServiceProxy;
 using Bam.Net.Messaging;
-using Bam.Net.ServiceProxy.Secure;
+//using Bam.Net.ServiceProxy.Secure;
 using System.Threading;
 using Bam.Net.Testing.Integration;
 using Bam.Net.Data.SQLite;
