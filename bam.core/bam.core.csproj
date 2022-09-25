@@ -62,6 +62,7 @@
     <None Remove="Automation\Scripting\CSharpScriptContext.hbs" />
     <Compile Include="..\submodules\bam.net.shared\Encryption\IEncryptedHttpRequest.cs" Link="IEncryptedHttpRequest.cs" />
     <Compile Include="..\submodules\bam.net.shared\Encryption\IHttpRequestHeaderEncryptor.cs" Link="IHttpRequestHeaderEncryptor.cs" />
+    <Compile Include="..\submodules\bam.net.shared\ServiceProxy\IServiceProxyClient.cs" Link="IServiceProxyClient.cs" />
     <EmbeddedResource Include="Automation\Scripting\CSharpScriptContext.hbs" />    
   </ItemGroup>
   <ItemGroup>

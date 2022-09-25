@@ -49,10 +49,10 @@ namespace Bam.Net.Services.Tests
         [TestGroup("Catalog")]
         public void KeysCalculateCorrectlyForValues()
         {
-            OutLine(new CatalogDefinition().ToJson(true));
+            Message.PrintLine(new CatalogDefinition().ToJson(true));
             
-            CatalogService svc = GetTestCatalogService(nameof(CanFindCatalog), out DaoRepository daoRepository);
-            string testCatalogName = $"{nameof(CanFindCatalog)}_TestCatalog";
+            CatalogService svc = GetTestCatalogService(nameof(KeysCalculateCorrectlyForValues), out DaoRepository daoRepository);
+            string testCatalogName = $"{nameof(KeysCalculateCorrectlyForValues)}_TestCatalog";
             CatalogDefinition catalogDefinition = new CatalogDefinition()
             {
                 Name = testCatalogName, OrganizationKey = svc.ServerOrganization.Key,

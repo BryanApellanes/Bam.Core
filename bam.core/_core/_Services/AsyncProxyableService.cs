@@ -22,7 +22,7 @@ namespace Bam.Net.Services
     /// 
     /// </summary>
     /// <seealso cref="Bam.Net.CoreServices.ApplicationProxyableService" />
-    /// <seealso cref="Bam.Net.ServiceProxy.IHasServiceRegistry" />
+    /// <seealso cref="Bam.Net.ServiceProxy.IHasWebServiceRegistry" />
     public abstract partial class AsyncProxyableService
     {
         /// <summary>
@@ -42,7 +42,7 @@ namespace Bam.Net.Services
                     ClassName = request.ClassName,
                     MethodName = request.MethodName,
                     //Ext = "json",
-                    WebServiceRegistry = ServiceRegistry,
+                    WebServiceRegistry = WebServiceRegistry,
                     //ArgumentsAsJsonArrayOfJsonStrings = request.JsonArgs,
                     //IsInitialized = true,
                     Context = HttpContext

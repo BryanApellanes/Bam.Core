@@ -140,7 +140,7 @@ namespace Bam.Net.Configuration
                     return value;
                 }
             }
-            if (ConfigurationProvider != null && !string.IsNullOrEmpty(ApplicationName)) // TODO: account for UNKOWN application
+            if (ConfigurationProvider != null && !string.IsNullOrEmpty(ApplicationName)) // TODO: account for UNKNOWN application
             {
                 FireEvent(RetrievingFromService, new ConfigurationEventArgs { Key = key });
                 _config = ConfigurationProvider.GetApplicationConfiguration(ApplicationName);

@@ -36,6 +36,7 @@ using System.Reflection;
 using Bam.Net.Web;
 using Bam.Net.Testing.Unit;
 using Bam.Net.CoreServices;
+using Bam.Net.Services;
 
 namespace Bam.Net.ServiceProxy.Tests
 {
@@ -91,7 +92,7 @@ namespace Bam.Net.ServiceProxy.Tests
             string input = "monkey";
             string jsonParams = ApiArgumentEncoder.ArgumentsToJsonArgumentsArray(new object[] { input }).ToJson();//.ParametersToJsonParamsArray(new object[] { input }).ToJson();
 
-            ServiceRegistry testIncubator = new ServiceRegistry();
+            WebServiceRegistry testIncubator = new WebServiceRegistry();
             testIncubator.Set<Echo>(new Echo());
             SecureExecutionRequest request = new SecureExecutionRequest(context, "Echo", "Send", jsonParams);
             request.WebServiceRegistry = testIncubator;

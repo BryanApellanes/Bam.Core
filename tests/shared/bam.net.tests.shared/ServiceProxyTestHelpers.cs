@@ -192,10 +192,10 @@ namespace Bam.Net.ServiceProxy.Tests
             sspc = new EncryptedServiceProxyClient<ApiKeyRequiredEcho>(baseAddress);
         }
 
-        public static void StartSecureChannelTestServerGetEchoClient(out BamServer server, out EncryptedServiceProxyClient<Echo> sspc)
+        public static void StartSecureChannelTestServerGetEchoClient(out BamServer server, out EncryptedServiceProxyClient<Echo> encryptedServiceProxyClient)
         {
             StartTestServer<SecureChannel, Echo>(out string baseAddress, out server);
-            sspc = new EncryptedServiceProxyClient<Echo>(baseAddress);
+            encryptedServiceProxyClient = new EncryptedServiceProxyClient<Echo>(baseAddress);
         }
 
         public static void StartSecureChannelTestServerGetEncryptedEchoClient(out BamServer server, out EncryptedServiceProxyClient<EncryptedEcho> sspc)
@@ -241,8 +241,8 @@ namespace Bam.Net.ServiceProxy.Tests
         {
             BamConf conf = new BamConf();            
             server = new BamServer(conf);
-            server.DefaultHostPrefix.Port = RandomNumber.Between(8081, 65535);
-            baseAddress = server.DefaultHostPrefix.ToString();
+            server.DefaultHostBinding.Port = RandomNumber.Between(8081, 65535);
+            baseAddress = server.DefaultHostBinding.ToString();
             Servers.Add(server);
         }
 

@@ -19,6 +19,7 @@ using Bam.Net.Incubation;
 using Bam.Net.Server;
 using Bam.Net.Server.ServiceProxy;
 using Bam.Net.ServiceProxy.Encryption;
+using Bam.Net.Services;
 using Bam.Net.Testing;
 using Bam.Net.Testing.Unit;
 using Bam.Net.UserAccounts;
@@ -69,29 +70,6 @@ namespace Bam.Net.ServiceProxy.Tests
 				Interactive();
 			}
 		}
-
-        [UnitTest("Test HeaderCollection")]
-        public void TestHeaderCollection()
-        {
-            WebHeaderCollection headers = new WebHeaderCollection();
-            headers.Add("Monkey", "banana");
-            headers.Set("Banana", "Monkey");
-
-            headers.Add("Monkey", "AddAgain");
-            headers.Set("Monkey", "Set");
-
-            headers.Add("Banana", "AddAgain");
-            headers.Set("Banana", "SetAgain");
-
-            headers.Add("AddDoesntExist", "AddDoesntExist");
-            headers.Set("SetDoesntExist", "SetDoesntExist");
-
-            foreach (string key in headers.Keys)
-            {
-                Message.PrintLine("{0}={1}", key, headers[key]);
-            }
-            
-        }
 
         class TestApiKeyClient: EncryptedServiceProxyClient<string>
         {
@@ -268,11 +246,11 @@ namespace Bam.Net.ServiceProxy.Tests
         public void SecureServiceProxyInvokeShouldSucceed()
         {
             BamServer server;
-            EncryptedServiceProxyClient<Echo> sspc;
-            ServiceProxyTestHelpers.StartSecureChannelTestServerGetEchoClient(out server, out sspc);
+            EncryptedServiceProxyClient<Echo> encryptedServiceProxyClient;
+            ServiceProxyTestHelpers.StartSecureChannelTestServerGetEchoClient(out server, out encryptedServiceProxyClient);
 
             string value = "InputValue_".RandomLetters(8);
-            string result = sspc.InvokeServiceMethod<string>("Send", new object[] { value });
+            string result = encryptedServiceProxyClient.InvokeServiceMethod<string>("Send", new object[] { value });
             server.Stop();
             Expect.AreEqual(value, result);
         }
@@ -363,7 +341,7 @@ namespace Bam.Net.ServiceProxy.Tests
             public TestExecutionRequest(string c, string m, string f)
                 : base(c, m)
             {
-                ServiceRegistry inc = new ServiceRegistry();
+                WebServiceRegistry inc = new WebServiceRegistry();
                 inc.Set(new Echo());
                 WebServiceRegistry = inc;
                 InvocationTarget = new Echo();
@@ -578,7 +556,7 @@ namespace Bam.Net.ServiceProxy.Tests
             IApiHmacKeyProvider keyProvider = null; // TODO: fix this using a substitute from NSubstitute // new LocalApiKeyProvider();
             ApiHmacKeyResolver keyResolver = new ApiHmacKeyResolver(keyProvider, nameProvider);
 
-            SecureChannel channel = new SecureChannel {ApiHmacKeyResolver = keyResolver};
+            SecureChannel channel = new SecureChannel() {ApiHmacKeyResolver = keyResolver};
 
             server.AddCommonService<SecureChannel>(channel);
             server.AddCommonService<ApiKeyRequiredEcho>();

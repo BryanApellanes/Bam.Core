@@ -17,6 +17,6 @@ namespace Bam.Net.Presentation
         string ContentType { get; set; }
         Stream OutputStream { get; set; }
         void Render(object toRender);        
-        void Respond(ServiceProxyInvocation invocation);
+        void RenderResponse(ServiceProxyInvocation invocation);
     }
 }
