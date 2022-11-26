@@ -43,3 +43,4 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("bam.net.data.integration.core.tests")]
 [assembly: InternalsVisibleTo("bam.net.presentation")]
 [assembly: InternalsVisibleTo("bake")]
+[assembly: InternalsVisibleTo("bamapi")]
