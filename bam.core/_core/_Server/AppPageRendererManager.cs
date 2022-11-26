@@ -104,36 +104,39 @@ namespace Bam.Net.Server
             {
                 FireEvent(RendererScanStarted);
                 DirectoryInfo binDir = new DirectoryInfo(Path.Combine(AppConf.AppRoot.Root, AppConf.BinDir));
-                foreach (FileInfo fileInfo in binDir.GetFiles("*.dll"))
+                if (binDir.Exists)
                 {
-                    try
+                    foreach (FileInfo fileInfo in binDir.GetFiles("*.dll"))
                     {
-                        Assembly assembly = Assembly.LoadFile(fileInfo.FullName);
-                        foreach (Type type in assembly.GetTypes())
+                        try
                         {
-                            if (type.ExtendsType<AppPageRenderer>())
+                            Assembly assembly = Assembly.LoadFile(fileInfo.FullName);
+                            foreach (Type type in assembly.GetTypes())
                             {
-                                AppPageRenderer appPageRenderer = type.Construct<AppPageRenderer>(AppContentResponder, CommonTemplateManager, ApplicationTemplateManager);
-                                if (extensions.Contains(appPageRenderer.FileExtension))
+                                if (type.ExtendsType<AppPageRenderer>())
                                 {
-                                    AddPageRenderer(appPageRenderer);
-                                    FireEvent(RendererLoaded, new RendererLoadedEventArgs {AppConf = AppConf, Renderer = appPageRenderer});
-                                }
-                                else if (type.HasCustomAttributeOfType<AppAttribute>(out AppAttribute attribute))
-                                {
-                                    if (attribute.Name.Equals(AppConf.Name, StringComparison.InvariantCultureIgnoreCase))
+                                    AppPageRenderer appPageRenderer = type.Construct<AppPageRenderer>(AppContentResponder, CommonTemplateManager, ApplicationTemplateManager);
+                                    if (extensions.Contains(appPageRenderer.FileExtension))
                                     {
                                         AddPageRenderer(appPageRenderer);
-                                        FireEvent(RendererLoaded, new RendererLoadedEventArgs {AppConf = AppConf, Renderer = appPageRenderer});
+                                        FireEvent(RendererLoaded, new RendererLoadedEventArgs { AppConf = AppConf, Renderer = appPageRenderer });
+                                    }
+                                    else if (type.HasCustomAttributeOfType<AppAttribute>(out AppAttribute attribute))
+                                    {
+                                        if (attribute.Name.Equals(AppConf.Name, StringComparison.InvariantCultureIgnoreCase))
+                                        {
+                                            AddPageRenderer(appPageRenderer);
+                                            FireEvent(RendererLoaded, new RendererLoadedEventArgs { AppConf = AppConf, Renderer = appPageRenderer });
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        GetLogger().AddEntry("Exception occurred scanning for extension renderers: {0}", ex, ex.Message);
-                        FireEvent(RendererScanError);
+                        catch (Exception ex)
+                        {
+                            GetLogger().AddEntry("Exception occurred scanning for extension renderers: {0}", ex, ex.Message);
+                            FireEvent(RendererScanError);
+                        }
                     }
                 }
                 FireEvent(RendererScanComplete);
