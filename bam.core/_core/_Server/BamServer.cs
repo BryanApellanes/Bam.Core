@@ -27,7 +27,7 @@ using Bam.Net.Presentation;
 namespace Bam.Net.Server
 {
     /// <summary>
-    /// The core BamServer
+    /// The core BamServer.  BamServer is a monolithic server that "does all the things".  It serves content, responds to Api (ServiceProxy) request and responds to IO (Dao and Data stream requests).
     /// </summary>
     public partial class BamServer // core
     {
@@ -46,11 +46,6 @@ namespace Bam.Net.Server
         {
             HandleRequestAsync(context);
         }
-
-/*        protected void ProcessRequest(HttpListenerContext context)
-        {
-            HandleRequestAsync(new HttpContextWrapper(context));
-        }*/
 
         private void HandleException(IHttpContext context, Exception ex)
         {
