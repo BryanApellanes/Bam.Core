@@ -23,7 +23,7 @@ namespace Bam.Net.CommandLine
         [DebuggerStepThrough]
         protected internal static void InvokeInSeparateAppDomain(MethodInfo method, object instance, object state, object[] ps = null)
         {
-            Log.Warn("{0} is not implemented on this platform and will delegate to {1} losing state.", nameof(InvokeInSeparateAppDomain), nameof(InvokeInCurrentAppDomain));
+            //Log.Warn("{0} is not implemented on this platform and will delegate to {1} losing state.", nameof(InvokeInSeparateAppDomain), nameof(InvokeInCurrentAppDomain));
             InvokeInCurrentAppDomain(method, instance, ps);
             
             // TODO: implement this using ExecuteAssembly, possibly generate a wrapper assembly to invoke the method in order to GetData that was set with SetData; see below
