@@ -60,15 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Automation\Scripting\CSharpScriptContext.hbs" />
-    <Compile Include="..\submodules\bam.net.shared\Encryption\IEncryptedHttpRequest.cs" Link="IEncryptedHttpRequest.cs" />
-    <Compile Include="..\submodules\bam.net.shared\Encryption\IHttpRequestHeaderEncryptor.cs" Link="IHttpRequestHeaderEncryptor.cs" />
-    <Compile Include="..\submodules\bam.net.shared\ServiceProxy\IServiceProxyClient.cs" Link="IServiceProxyClient.cs" />
     <EmbeddedResource Include="Automation\Scripting\CSharpScriptContext.hbs" />    
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\submodules\bam.net.shared\CoreServices\WebHooks\Data\DaoRepoGenerationConfig.yaml">
-      <Link>bam.net.shared\CoreServices\WebHooks\Data\DaoRepoGenerationConfig.yaml</Link>
-    </Content>
   </ItemGroup>
   <Import Project="..\submodules\bam.net.shared\bam.net.shared.projitems" Label="Shared" />
   <Target Name="PublishAll" BeforeTargets="GenerateNuspec">
