@@ -1,7 +1,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace NCuid
+namespace Bam.Net
 {
     /// <summary>
     /// When generating CUIDs, specifes which kind of random number source will be used. 

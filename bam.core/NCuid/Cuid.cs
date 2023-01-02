@@ -4,8 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Security;
 using System.Security.Cryptography;
+using NCuid;
 
-namespace NCuid
+namespace Bam.Net
 {
     /// <summary>
     /// Utility class to generate CUIDs see https://github.com/dilvie/cuid for complete manifesto
