@@ -29,7 +29,7 @@ namespace Bam.Net.Server
     /// <summary>
     /// The core BamServer.  BamServer is a monolithic server that "does all the things".  It serves content, responds to Api (ServiceProxy) request and responds to IO (Dao and Data stream requests).
     /// </summary>
-    public partial class BamServer // core
+    public partial class BamAppServer // core
     {
         protected void PreProcessRequest(IHttpContext context)
         {
