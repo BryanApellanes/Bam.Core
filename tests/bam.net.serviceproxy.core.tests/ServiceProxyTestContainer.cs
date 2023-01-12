@@ -105,7 +105,7 @@ namespace Bam.Net.ServiceProxy.Tests
         [UnitTest]
         public void PostShouldFireEvents()
         {
-            BamServer server;
+            BamAppServer server;
             EncryptedServiceProxyClient<Echo> sspc;
             ServiceProxyTestHelpers.StartTestServerGetEchoClient(out server, out sspc);
 
@@ -139,7 +139,7 @@ namespace Bam.Net.ServiceProxy.Tests
         [UnitTest]
         public void PostShouldBeCancelable()
         {
-            BamServer server;
+            BamAppServer server;
             EncryptedServiceProxyClient<Echo> sspc;
             ServiceProxyTestHelpers.StartTestServerGetEchoClient(out server, out sspc);
 
@@ -175,7 +175,7 @@ namespace Bam.Net.ServiceProxy.Tests
         [UnitTest]
         public void GetShouldFireEvents()
         {
-            BamServer server;
+            BamAppServer server;
             EncryptedServiceProxyClient<Echo> sspc;
             ServiceProxyTestHelpers.StartTestServerGetEchoClient(out server, out sspc);
 
@@ -209,7 +209,7 @@ namespace Bam.Net.ServiceProxy.Tests
         [UnitTest]
         public void SecureServiceProxyInvokeShouldFireSessionStarting()
         {
-            BamServer server;
+            BamAppServer server;
             EncryptedServiceProxyClient<Echo> sspc;
             ServiceProxyTestHelpers.StartSecureChannelTestServerGetEchoClient(out server, out sspc);
             bool? sessionStartingCalled = false;
@@ -226,7 +226,7 @@ namespace Bam.Net.ServiceProxy.Tests
         [UnitTest]
         public void SecureServiceProxyInvokeShouldEstablishSessionIfSecureChannelServerRegistered()
         {
-            BamServer server;
+            BamAppServer server;
             EncryptedServiceProxyClient<Echo> testSecureServiceProxyClient;
             ServiceProxyTestHelpers.StartSecureChannelTestServerGetEchoClient(out server, out testSecureServiceProxyClient);
 
@@ -245,7 +245,7 @@ namespace Bam.Net.ServiceProxy.Tests
         [UnitTest]
         public void SecureServiceProxyInvokeShouldSucceed()
         {
-            BamServer server;
+            BamAppServer server;
             EncryptedServiceProxyClient<Echo> encryptedServiceProxyClient;
             ServiceProxyTestHelpers.StartSecureChannelTestServerGetEchoClient(out server, out encryptedServiceProxyClient);
 
@@ -292,7 +292,7 @@ namespace Bam.Net.ServiceProxy.Tests
         [UnitTest]
         public async void StartSession()
         {
-            BamServer server;
+            BamAppServer server;
             EncryptedServiceProxyClient<Echo> sspc;
             ServiceProxyTestHelpers.StartSecureChannelTestServerGetEchoClient(out server, out sspc);
 
@@ -303,7 +303,7 @@ namespace Bam.Net.ServiceProxy.Tests
         [UnitTest]
         public void GetShouldBeCancelable()
         {
-            BamServer server;
+            BamAppServer server;
             EncryptedServiceProxyClient<Echo> sspc;
             ServiceProxyTestHelpers.StartTestServerGetEchoClient(out server, out sspc);
 
@@ -511,7 +511,7 @@ namespace Bam.Net.ServiceProxy.Tests
         public void SecureServiceProxyInvokeWithInvalidTokenShouldFail()
         {
 			CleanUp();
-            BamServer server;
+            BamAppServer server;
             ServiceProxyTestHelpers.StartSecureChannelTestServerGetApiKeyRequiredEchoClient(out server, out EncryptedServiceProxyClient<ApiKeyRequiredEcho> sspc);
             
             string value = "InputValue_".RandomLetters(8);
@@ -548,7 +548,7 @@ namespace Bam.Net.ServiceProxy.Tests
 			CleanUp();
             string methodName = MethodBase.GetCurrentMethod().Name;
 
-            ServiceProxyTestHelpers.CreateServer(out string baseAddress, out BamServer server);
+            ServiceProxyTestHelpers.CreateServer(out string baseAddress, out BamAppServer server);
             ServiceProxyTestHelpers.Servers.Add(server); // makes sure it gets stopped after test run
             EncryptedServiceProxyClient<ApiKeyRequiredEcho> sspc = new EncryptedServiceProxyClient<ApiKeyRequiredEcho>(baseAddress);
 

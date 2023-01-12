@@ -78,7 +78,7 @@ namespace Bam.Net.Services.Tests
 
         public class Child
         {
-            public Child() { Cuid = NCuid.Cuid.Generate(); }
+            public Child() { Cuid = Bam.Net.Cuid.Generate(); }
             public string Cuid { get; set; }
             public string ChildName { get; set; }
             public virtual List<Parent> Parents { get; set; }
@@ -87,7 +87,7 @@ namespace Bam.Net.Services.Tests
 
         public class Toy
         {
-            public Toy() { Cuid = NCuid.Cuid.Generate(); }
+            public Toy() { Cuid = Bam.Net.Cuid.Generate(); }
             public string Cuid { get; set; }
             public virtual Child Child { get; set; }
             public long ChildId { get; set; }
@@ -95,7 +95,7 @@ namespace Bam.Net.Services.Tests
 
         public class House
         {
-            public House() { Cuid = NCuid.Cuid.Generate(); }
+            public House() { Cuid = Bam.Net.Cuid.Generate(); }
             public string Cuid { get; set; }
             public string HouseName { get; set; }
             public virtual List<Parent> Parents { get; set; }
@@ -103,7 +103,7 @@ namespace Bam.Net.Services.Tests
 
         public class Parent
         {
-            public Parent() { Cuid = NCuid.Cuid.Generate(); }
+            public Parent() { Cuid = Bam.Net.Cuid.Generate(); }
             public string Cuid { get; set; }
             public string ParentName { get; set; }
             public virtual List<Child> Children { get; set; }
