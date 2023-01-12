@@ -62,11 +62,11 @@
     <None Remove="Automation\Scripting\CSharpScriptContext.hbs" />
     <EmbeddedResource Include="Automation\Scripting\CSharpScriptContext.hbs" />    
   </ItemGroup>
-  <Import Project="..\submodules\bam.net.shared\bam.net.shared.projitems" Label="Shared" />
   <Target Name="PublishAll" BeforeTargets="GenerateNuspec">
     <ItemGroup>
       <_TargetFramework Include="$(TargetFrameworks)" />
       <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Publish" Properties="TargetFramework=%(_TargetFramework.Identity)" />
     </ItemGroup>
   </Target>
+  <Import Project="..\submodules\bam.net.shared\bam.net.shared.projitems" Label="Shared" />
 </Project>
