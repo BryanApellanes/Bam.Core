@@ -34,7 +34,7 @@ namespace Bam.Net.ServiceProxy.Tests
     {
         static ServiceProxyTestHelpers()
         {
-            Servers = new HashSet<BamServer>();
+            Servers = new HashSet<BamAppServer>();
             AppDomain.CurrentDomain.DomainUnload += (o, a) => StopServers();
         }
 
@@ -177,45 +177,45 @@ namespace Bam.Net.ServiceProxy.Tests
         }
 
         #region helpers
-        public static HashSet<BamServer> Servers { get; }
+        public static HashSet<BamAppServer> Servers { get; }
 
         // TODO: this crap needs to be refactored, oh my
-        public static void StartTestServerGetEchoClient(out BamServer server, out EncryptedServiceProxyClient<Echo> sspc)
+        public static void StartTestServerGetEchoClient(out BamAppServer server, out EncryptedServiceProxyClient<Echo> sspc)
         {
             StartTestServer(out string baseAddress, out server);
             sspc = new EncryptedServiceProxyClient<Echo>(baseAddress);
         }
 
-        public static void StartSecureChannelTestServerGetApiKeyRequiredEchoClient(out BamServer server, out EncryptedServiceProxyClient<ApiKeyRequiredEcho> sspc)
+        public static void StartSecureChannelTestServerGetApiKeyRequiredEchoClient(out BamAppServer server, out EncryptedServiceProxyClient<ApiKeyRequiredEcho> sspc)
         {
             StartTestServer<SecureChannel, ApiKeyRequiredEcho>(out string baseAddress, out server);
             sspc = new EncryptedServiceProxyClient<ApiKeyRequiredEcho>(baseAddress);
         }
 
-        public static void StartSecureChannelTestServerGetEchoClient(out BamServer server, out EncryptedServiceProxyClient<Echo> encryptedServiceProxyClient)
+        public static void StartSecureChannelTestServerGetEchoClient(out BamAppServer server, out EncryptedServiceProxyClient<Echo> encryptedServiceProxyClient)
         {
             StartTestServer<SecureChannel, Echo>(out string baseAddress, out server);
             encryptedServiceProxyClient = new EncryptedServiceProxyClient<Echo>(baseAddress);
         }
 
-        public static void StartSecureChannelTestServerGetEncryptedEchoClient(out BamServer server, out EncryptedServiceProxyClient<EncryptedEcho> sspc)
+        public static void StartSecureChannelTestServerGetEncryptedEchoClient(out BamAppServer server, out EncryptedServiceProxyClient<EncryptedEcho> sspc)
         {
             StartTestServer<SecureChannel, EncryptedEcho>(out string baseAddress, out server);
             sspc = new EncryptedServiceProxyClient<EncryptedEcho>(baseAddress);
         }
 
-        public static void StartSecureChannelTestServerGetClient<T>(out BamServer server, out EncryptedServiceProxyClient<T> sspc)
+        public static void StartSecureChannelTestServerGetClient<T>(out BamAppServer server, out EncryptedServiceProxyClient<T> sspc)
         {
             StartTestServer<SecureChannel, T>(out string baseAddress, out server);
             sspc = new EncryptedServiceProxyClient<T>(baseAddress);
         }
 
-        public static void StartTestServer(out string baseAddress, out BamServer server)
+        public static void StartTestServer(out string baseAddress, out BamAppServer server)
         {
             StartTestServer<Echo>(out baseAddress, out server);
         }
 
-        public static void StartTestServer<T>(out string baseAddress, out BamServer server)
+        public static void StartTestServer<T>(out string baseAddress, out BamAppServer server)
         {
             InjectTestConfiguration();
             // Test server to catch calls
@@ -225,7 +225,7 @@ namespace Bam.Net.ServiceProxy.Tests
             // /end- Test server to catch calls
         }
 
-        public static void StartTestServer<T1, T2>(out string baseAddress, out BamServer server)
+        public static void StartTestServer<T1, T2>(out string baseAddress, out BamAppServer server)
         {
             InjectTestConfiguration();
             // Test server to catch calls
@@ -237,16 +237,16 @@ namespace Bam.Net.ServiceProxy.Tests
             // /end- Test server to catch calls
         }
 
-        public static void CreateServer(out string baseAddress, out BamServer server)
+        public static void CreateServer(out string baseAddress, out BamAppServer server)
         {
             BamConf conf = new BamConf();            
-            server = new BamServer(conf);
+            server = new BamAppServer(conf);
             server.DefaultHostBinding.Port = RandomNumber.Between(8081, 65535);
             baseAddress = server.DefaultHostBinding.ToString();
             Servers.Add(server);
         }
 
-        public static void AddService<T>(BamServer server)
+        public static void AddService<T>(BamAppServer server)
         {
             server.AddCommonService<T>();
         }
