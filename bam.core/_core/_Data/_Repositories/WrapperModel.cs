@@ -1,7 +1,7 @@
 ﻿using Bam.Net.CommandLine;
 using Bam.Net.Data.Schema;
 using Bam.Net.ServiceProxy;
-using Bam.Net.Testing;
+//using Bam.Net.Testing;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
